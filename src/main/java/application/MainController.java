@@ -118,12 +118,12 @@ public class MainController implements Initializable {
 	public void updateModel(ActionEvent event) throws Exception {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Files");
-		//		fileChooser.setInitialDirectory(new File("CollaborationRepository/"));
+		//fileChooser.setInitialDirectory(new File("CollaborationRepository/"));
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Choreography", "*.bpmn"),
 				new ExtensionFilter("All Files", "*.*"));
 		File selectedFile = fileChooser.showOpenDialog(null);
 		if (selectedFile != null) {
-
+            
 			this.updated_model_path.setText(selectedFile.getName());
 
 			
@@ -146,33 +146,36 @@ public class MainController implements Initializable {
 	
 	public void button_default_model(ActionEvent event) {
 		//LOAD DEFAULT MODEL
-		 this.a.setContentText("You selected Load Default Model");
-		 this.a.setAlertType(AlertType.CONFIRMATION);
-		 this.a.show();
+		this.a.setContentText("You selected Load Default Model");
+		this.a.setAlertType(AlertType.CONFIRMATION);
+		this.a.show();
 	}
 
 	
-	
+        	
 	public void ruleList(ActionEvent event) throws Exception {
 		//LOAD DEFAULT MODEL
-		 this.a.setContentText("You selected GetMessage List");
-		 this.a.setAlertType(AlertType.CONFIRMATION);
-		 this.a.show();
-		 List idList = u.getIDs();
-		 String result = "";
-		for (Object id: idList) {
+		this.a.setContentText("You selected GetMessage List");
+		this.a.setAlertType(AlertType.CONFIRMATION);
+		this.a.show();
+		List idList = u.getIDs();
+		String result = "";
+	
+        for (Object id: idList) {
 			result += " "+id+",";
 		}
-        if(result == null || result.isEmpty()){
+    
+        if(result == null || result.isEmpty()) {
             System.out.println("Guarda che result e' null (o vuota)!!!\n");
         }
+    
         else {
-            System.out.println("Result non e' null\n");
+            System.out.println("Ecco result: " + result);
+            this.Text_area.setText(result);
+            //Textfield_variable_results.setText(result);
         }
-        System.out.println("Ecco result: " + result);
-        this.Text_area.setText(result);
-        //Textfield_variable_results.setText(result);
 	}
+
 	public void executeQuery(ActionEvent event) throws Exception {
 		String message="You selected Execute query: "+ Text_messageID_query.getText()+ " -->" + Text_input_query.getText();
 		String content = this.Text_input_query.getText();
@@ -187,6 +190,7 @@ public class MainController implements Initializable {
 		this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
 
 	}
+
 	public void setContract(ActionEvent event) {
 		//TextField_contract_address.setText("0x4041d79f597a341d760d1c250cc6835d0b30ab3d1893214801adc1eb39a4738e");
 		String address = this.TextField_contract_address.getText();
@@ -229,8 +233,13 @@ public class MainController implements Initializable {
 			result = String.valueOf(this.u.getBoolFromContract(varName));
 
 		}
-
-		this.Textfield_variable_results.setText(result);
+        
+        if(result == null || result.isEmpty()) {
+            System.out.println("Non hai settato results\n");
+        }
+        
+        this.Text_area.setText(result);
+		//this.Textfield_variable_results.setText(result);
 
 	}
 
