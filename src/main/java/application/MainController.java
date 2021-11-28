@@ -200,7 +200,7 @@ public class MainController implements Initializable {
             }
     
             else {
-                System.out.println("Ecco result: " + result);
+                System.out.println("Ecco la lista dei messaggi: " + result);
                 this.Text_area.setText(result);
                 //Textfield_variable_results.setText(result);
             }
