@@ -222,6 +222,20 @@ public class MainController implements Initializable {
                 System.out.println("\nAssicurati che il campo input list sia valido\n");
             }
 
+            boolean found = false;
+		    List idList = u.getIDs();
+            for (Object id: idList) {
+                    if(Text_messageID_query.getText().equals(id)) {
+                        System.out.println("Corrispondenza trovata: \n" + id);
+                        found = true;
+                        break;
+                    }
+		    }
+            if(found == false){
+                System.out.println("Corrispondenza non trovata\n");
+                throw new Exception("MessageID non valido");
+            }
+
             String message="You selected Execute query: "+ Text_messageID_query.getText()+ " -->" + Text_input_query.getText();
 		    String content = this.Text_input_query.getText();
 		    this.a.setContentText(message);
