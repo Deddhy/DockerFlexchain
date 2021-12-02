@@ -223,7 +223,7 @@ public class MainController implements Initializable {
             }
 
             boolean found = false;
-		    List idList = u.getIDs();
+            List idList = u.getIDs();
             for (Object id: idList) {
                     if(Text_messageID_query.getText().equals(id)) {
                         System.out.println("Corrispondenza trovata: \n" + id);
