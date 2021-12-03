@@ -34,10 +34,10 @@ public class Translator {
 
     public String deployAndUpload() throws Exception {
         BlockchainUtils u = new BlockchainUtils();
-       // String address = u.deployContract();
+        // String address = u.deployContract();
         ProcessTemplate processTemplate = u.deployContract();
         String address = processTemplate.getContractAddress();
-        System.out.println("Smart contract address: " + address);
+        //System.out.println("L'indirizzo dello smart contract è: " + "https://rinkeby.etherscan.io/address/" + address);
         u.loadContract(address);
         /*for(String id : idList){
             System.out.println("pushed id: " + id);
@@ -68,50 +68,46 @@ public class Translator {
 
         List ids = contract.getIDs().send();
 
-        for (int i = 0; i < idList.size(); i++){
-            if(ids.contains(idList.get(i))){
+        for (int i = 0; i < idList.size(); i++) {
+            if (ids.contains(idList.get(i))) {
                 String res = contract.getRule(idList.get(i)).send();
                 //If the rule is already present and is the same don't touch it
-                if(res.equals(rulesList.get(i))){
+                if (res.equals(rulesList.get(i))) {
                     System.out.println("Same rule with id: " + idList.get(i));
-                } else{
+                } else {
                     //if the rule is different but with same id buffer it and finally push to the setRules function
                     //that in this case serves as an update
                     System.out.println("Rule to update: " + idList.get(i));
                     finalIds.add(idList.get(i));
                     finalRules.add(rulesList.get(i));
                 }
-            } else{
+            } else {
                 //if the rule is different and new then add it to the contract,
                 System.out.println("Rule to add:  " + idList.get(i));
                 newIds.add(idList.get(i));
                 newRules.add(rulesList.get(i));
-
                 //finalIds.add(idList.get(i));
                 //finalRules.add(rulesList.get(i));
-
             }
         }
-        for (Object t: ids) {
-            if(!idList.contains((String) t)){
+        for (Object t : ids) {
+            if (!idList.contains((String) t)) {
                 oldIds.add((String) t);
                 System.out.println("Rule to remove with id: " + (String) t);
-
             }
         }
-        if(!finalIds.isEmpty()){
+        if (!finalIds.isEmpty()) {
             u.setRulesToContract(finalIds, finalRules);
             System.out.println("Rules updated");
         }
-        if(!newIds.isEmpty()){
-            u.addRuleToContract(newIds,newRules);
+        if (!newIds.isEmpty()) {
+            u.addRuleToContract(newIds, newRules);
             System.out.println("Rules added");
         }
-        if(!oldIds.isEmpty()){
+        if (!oldIds.isEmpty()) {
             u.deleteRule(oldIds);
             System.out.println("Rules removed");
         }
-
 
     }
 
@@ -129,11 +125,11 @@ public class Translator {
     }*/
 
 
-    public void readModel(File file){
+    public void readModel(File file) {
         modelInstance = Bpmn.readModelFromFile(file);
     }
 
-    public void getParticipants(){
+    public void getParticipants() {
         Collection<Participant> parti = modelInstance.getModelElementsByType(Participant.class);
         for (Participant p : parti) {
             participants.add(p.getName());
@@ -143,24 +139,24 @@ public class Translator {
 
     //TODO
     //HANDLE EVENT BASED GW
-    public String flowNodeSearch(){
+    public String flowNodeSearch() {
         String rule = "";
         //get all the sequence flow of the model
-        for(SequenceFlow flow : modelInstance.getModelElementsByType(SequenceFlow.class)){
+        for (SequenceFlow flow : modelInstance.getModelElementsByType(SequenceFlow.class)) {
             //get the target of the sequence flow, so the element to be processed
             ModelElementInstance node = modelInstance.getModelElementById(flow.getAttributeValue("targetRef"));
             ModelElementInstance source = modelInstance.getModelElementById(flow.getAttributeValue("sourceRef"));
             if (node instanceof ModelElementInstanceImpl && !(node instanceof EndEvent)
                     && !(node instanceof ParallelGateway) && !(node instanceof ExclusiveGateway)
-                    && !(node instanceof EventBasedGateway)){
+                    && !(node instanceof EventBasedGateway)) {
                 ChoreographyTask task = new ChoreographyTask((ModelElementInstanceImpl) node, modelInstance);
                 String requestId = getRequestId(task);
                 String responseId = getResponseId(task);
                 //if the request exists check if it is enable and if the previous is completed
 
-                if(!requestId.isEmpty()) {
-                    try{
-                        if (!(source instanceof StartEvent) && !(source instanceof ParallelGateway)){
+                if (!requestId.isEmpty()) {
+                    try {
+                        if (!(source instanceof StartEvent) && !(source instanceof ParallelGateway)) {
                             orCondition = ", ";
                         }
                         String singleRule = "";
@@ -183,29 +179,29 @@ public class Translator {
                         idList.add(requestId);
                         rulesList.add(singleRule);
                         rule += singleRule;
-                    } catch(Exception e){
+                    } catch (Exception e) {
                         System.out.println("fake message detected on the request: " + requestId);
                         System.out.println("exception: " + e);
 
-                        rule+="";
+                        rule += "";
                     }
                 }
                 //if the response exists, check if it is enabled and if the previous request is completed
-                if(!responseId.isEmpty()) {
+                if (!responseId.isEmpty()) {
                     try {
                         String singleRule = "";
-                            singleRule += "rule \'" + responseId + "\'\n" +
-                                    "when\n" +
-                                    "   b : BlockchainUtils(b.getState(\'" + responseId + "\')==0, b.getState(\'" + requestId + "\')==2)\n" +
-                                    "then\n" +
-                                    "" + createThenPart(getMessageName(responseId), responseId) + "\n " +
-                                    "end\n\n";
+                        singleRule += "rule \'" + responseId + "\'\n" +
+                                "when\n" +
+                                "   b : BlockchainUtils(b.getState(\'" + responseId + "\')==0, b.getState(\'" + requestId + "\')==2)\n" +
+                                "then\n" +
+                                "" + createThenPart(getMessageName(responseId), responseId) + "\n " +
+                                "end\n\n";
                         idList.add(responseId);
                         rulesList.add(singleRule);
                         rule += singleRule;
-                    } catch(Exception e){
+                    } catch (Exception e) {
                         System.out.println("fake message detected on the response: " + responseId);
-                        rule+="";
+                        rule += "";
                     }
                 }
 
@@ -216,7 +212,7 @@ public class Translator {
 
     }
 
-    public String getRequestId(ChoreographyTask task){
+    public String getRequestId(ChoreographyTask task) {
 
         if (task.getRequest() != null) {
             MessageFlow requestMessageFlowRef = task.getRequest();
@@ -229,154 +225,154 @@ public class Translator {
     }
 
 
-    public String getResponseId(ChoreographyTask task){
-       if (task.getResponse() != null) {
+    public String getResponseId(ChoreographyTask task) {
+        if (task.getResponse() != null) {
             MessageFlow responseMessageFlowRef = task.getResponse();
             MessageFlow responseMessageFlow = modelInstance.getModelElementById(responseMessageFlowRef.getId());
             Message responseMessage = modelInstance
                     .getModelElementById(responseMessageFlow.getAttributeValue("messageRef"));
             return responseMessage.getAttributeValue("id");
-       }
+        }
         return "";
     }
 
-    public String getMessageName(String id){
-            Message message = modelInstance.getModelElementById(id);
-            if (!message.getAttributeValue("name").isEmpty()) {
-                return message.getAttributeValue("name");
-            }
-            return "";
+    public String getMessageName(String id) {
+        Message message = modelInstance.getModelElementById(id);
+        if (!message.getAttributeValue("name").isEmpty()) {
+            return message.getAttributeValue("name");
+        }
+        return "";
 
     }
 
-    public String createThenPart(String messageName, String messageId){
+    public String createThenPart(String messageName, String messageId) {
 
-            //assuming message is in format name(x y, x1 y1, x2 y2)
-            String replaced1 = messageName.replace(")", "");
-            String[] split1 = replaced1.split("\\(");
-            //now the list contains ["x y", "x1 y1", "x2 y2"];
-            List<String> split2 = Arrays.asList(split1[1].split(","));
+        //assuming message is in format name(x y, x1 y1, x2 y2)
+        String replaced1 = messageName.replace(")", "");
+        String[] split1 = replaced1.split("\\(");
+        //now the list contains ["x y", "x1 y1", "x2 y2"];
+        List<String> split2 = Arrays.asList(split1[1].split(","));
 
-            String listTypes = "    List<String> types = Arrays.asList(new String[]{";
-            String listNames = "    List<String> variables = Arrays.asList(new String[]{";
-            String listInputs = "   List<String> values = Arrays.asList(new String[]{";
+        String listTypes = "    List<String> types = Arrays.asList(new String[]{";
+        String listNames = "    List<String> variables = Arrays.asList(new String[]{";
+        String listInputs = "   List<String> values = Arrays.asList(new String[]{";
 
-            for (String param : split2) {
-                //now is ["x", "y"]
-                String[] params = param.split(" ");
-                List<String> buffer = new ArrayList<>();
-                //check for removing white spaces that confuse the parser
-                for (String c : params) {
-                    if (!c.isEmpty()) {
-                        buffer.add(c);
-                    }
-                }
-                //check if the element is the last for the comma after the argument
-                if (split2.indexOf(param) == (split2.size() - 1)) {
-                    listTypes += "\'" + buffer.get(0) + "\'";
-                } else {
-                    listTypes += "\'" + buffer.get(0) + "\',";
-                }
-                //same structure but for creating the second list of param names
-                if (split2.indexOf(param) == (split2.size() - 1)) {
-                    listNames += "\'" + buffer.get(1) + "\'";
-                } else {
-                    listNames += "\'" + buffer.get(1) + "\',";
-                }
-                //if the element is the last one end otherwise add the comma
-                if (split2.indexOf(param) == (split2.size() - 1)) {
-                    listInputs += "b.getSingleInput(" + split2.indexOf(param) + ")";
-                } else {
-                    listInputs += "b.getSingleInput(" + split2.indexOf(param) + "),";
+        for (String param : split2) {
+            //now is ["x", "y"]
+            String[] params = param.split(" ");
+            List<String> buffer = new ArrayList<>();
+            //check for removing white spaces that confuse the parser
+            for (String c : params) {
+                if (!c.isEmpty()) {
+                    buffer.add(c);
                 }
             }
-            listTypes += "});\n";
-            listNames += "});\n";
-            listInputs += "});\n";
-            String setVariables = "b.setVarialesToContract(types, variables, values, \'" + messageId + "\');";
+            //check if the element is the last for the comma after the argument
+            if (split2.indexOf(param) == (split2.size() - 1)) {
+                listTypes += "\'" + buffer.get(0) + "\'";
+            } else {
+                listTypes += "\'" + buffer.get(0) + "\',";
+            }
+            //same structure but for creating the second list of param names
+            if (split2.indexOf(param) == (split2.size() - 1)) {
+                listNames += "\'" + buffer.get(1) + "\'";
+            } else {
+                listNames += "\'" + buffer.get(1) + "\',";
+            }
+            //if the element is the last one end otherwise add the comma
+            if (split2.indexOf(param) == (split2.size() - 1)) {
+                listInputs += "b.getSingleInput(" + split2.indexOf(param) + ")";
+            } else {
+                listInputs += "b.getSingleInput(" + split2.indexOf(param) + "),";
+            }
+        }
+        listTypes += "});\n";
+        listNames += "});\n";
+        listInputs += "});\n";
+        String setVariables = "b.setVarialesToContract(types, variables, values, \'" + messageId + "\');";
 
-            return listTypes + listNames + listInputs + setVariables;
+        return listTypes + listNames + listInputs + setVariables;
 
     }
 
 
-    public String checkForCondition(SequenceFlow flow){
+    public String checkForCondition(SequenceFlow flow) {
         //recursive search for the latest previous message
         //if the element is a gw I get the source until a task appears
         //then with the task I get the response or request
         String getter = "";
         ModelElementInstance previous = modelInstance.getModelElementById(flow.getAttributeValue("sourceRef"));
-        if(previous instanceof ExclusiveGateway && flow.getName() != null){
+        if (previous instanceof ExclusiveGateway && flow.getName() != null) {
             //condition in format uint x > 5 || string x == "a" || bool x == true
             String conditionToParse = flow.getName();
             String[] params = conditionToParse.split(" ");
             List<String> buffer = new ArrayList<>();
             //check for removing white spaces that confuse the parser
-            for (String c: params) {
+            for (String c : params) {
                 if (!c.isEmpty()) {
                     buffer.add(c);
                 }
             }
             //depending on the param type a different getter is created
-            if(conditionToParse.contains("uint")){
-                getter += "b.getIntFromContract(\'"+buffer.get(1)+"\')" +
-                        ""+buffer.get(2) + buffer.get(3);
-            }else if(conditionToParse.contains("string")){
+            if (conditionToParse.contains("uint")) {
+                getter += "b.getIntFromContract(\'" + buffer.get(1) + "\')" +
+                        "" + buffer.get(2) + buffer.get(3);
+            } else if (conditionToParse.contains("string")) {
                 //System.out.println("buffer di stringhe: " + buffer);
-                getter += "b.getStringFromContract(\'"+buffer.get(1)+"\')" +
-                        ""+buffer.get(2) + buffer.get(3);
-            } else if(conditionToParse.contains("bool")){
-                getter += "b.getBoolFromContract(\'"+buffer.get(1)+"\')" +
-                        ""+buffer.get(2) + buffer.get(3);
+                getter += "b.getStringFromContract(\'" + buffer.get(1) + "\')" +
+                        "" + buffer.get(2) + buffer.get(3);
+            } else if (conditionToParse.contains("bool")) {
+                getter += "b.getBoolFromContract(\'" + buffer.get(1) + "\')" +
+                        "" + buffer.get(2) + buffer.get(3);
             }
         }
         return getter;
     }
 
-    public void getPreviousId(SequenceFlow flow){
+    public void getPreviousId(SequenceFlow flow) {
         List<String> previousIDs = new ArrayList<>();
         ModelElementInstance node = modelInstance.getModelElementById(flow.getAttributeValue("sourceRef"));
         //check previous if it is a message get its response or request
         if (node instanceof ModelElementInstanceImpl && !(node instanceof EndEvent)
                 && !(node instanceof ParallelGateway) && !(node instanceof ExclusiveGateway)
-                && !(node instanceof EventBasedGateway)){
+                && !(node instanceof EventBasedGateway)) {
             ChoreographyTask task = new ChoreographyTask((ModelElementInstanceImpl) node, modelInstance);
             //check if the request or response is empty or is a fake message
-            if(!getResponseId(task).isEmpty() && idList.contains(getResponseId(task))){
+            if (!getResponseId(task).isEmpty() && idList.contains(getResponseId(task))) {
                 //System.out.println("previous is a response"+ getResponseId(task));
                 orCondition += "b.getState(\'" + getResponseId(task) + "\')==2";
-            } else if(!getRequestId(task).isEmpty() && idList.contains(getRequestId(task))){
+            } else if (!getRequestId(task).isEmpty() && idList.contains(getRequestId(task))) {
                 //System.out.println("previous is a request"+ getRequestId(task));
                 orCondition += "b.getState(\'" + getRequestId(task) + "\')==2";
             }
         }
         //if there is a gateway take the incomings flows
         // for each incoming take the source and call again the method
-        else if(node instanceof ExclusiveGateway){
+        else if (node instanceof ExclusiveGateway) {
             List<Object> inc = Arrays.asList(((ExclusiveGateway) node).getIncoming().toArray());
-                for (Object f: inc) {
-                    //if the element is the latest remove the OR condition
-                    //cehck if the gw has more inputs so if the it is a join put the incoming msgs in OR
-                    getPreviousId((SequenceFlow) f);
-                    if(inc.indexOf(f) != (inc.size() -1))
-                        orCondition += " || ";
-                }
-        }else if(node instanceof ParallelGateway){
+            for (Object f : inc) {
+                //if the element is the latest remove the OR condition
+                //cehck if the gw has more inputs so if the it is a join put the incoming msgs in OR
+                getPreviousId((SequenceFlow) f);
+                if (inc.indexOf(f) != (inc.size() - 1))
+                    orCondition += " || ";
+            }
+        } else if (node instanceof ParallelGateway) {
             List<Object> inc = Arrays.asList(((ParallelGateway) node).getIncoming().toArray());
-            for (Object f: inc) {
+            for (Object f : inc) {
                 //if the element is the latest remove the OR condition
                 //cehck if the gw has more inputs so if it is a join put the incoming msgs in AND
                 getPreviousId((SequenceFlow) f);
-                if(inc.indexOf(f) != (inc.size() -1))
+                if (inc.indexOf(f) != (inc.size() - 1))
                     orCondition += " && ";
             }
-        }else if(node instanceof EventBasedGateway){
+        } else if (node instanceof EventBasedGateway) {
             List<Object> inc = Arrays.asList(((EventBasedGateway) node).getIncoming().toArray());
-            for (Object f: inc) {
+            for (Object f : inc) {
                 //if the element is the latest remove the OR condition
                 //cehck if the gw has more inputs so if it is aN EVENT based put the incoming msgs in OR
                 getPreviousId((SequenceFlow) f);
-                if(inc.indexOf(f) != (inc.size() -1))
+                if (inc.indexOf(f) != (inc.size() - 1))
                     orCondition += " || ";
             }
         }
@@ -490,11 +486,6 @@ public class Translator {
             }
         }
         myReader3.close();
-
-
-
     } */
-
-
 
 }

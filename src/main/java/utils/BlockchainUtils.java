@@ -49,8 +49,8 @@ public class BlockchainUtils {
         String abiPath = path + parseName(fileName, ".abi");
         String binPath = path + parseName(fileName, ".bin");
 
-        String[] args2 = { "-a", abiPath, "-b", binPath, "-o", projectPath + File.separator, "-p",
-                "ethereum", };
+        String[] args2 = {"-a", abiPath, "-b", binPath, "-o", projectPath + File.separator, "-p",
+                "ethereum",};
 
         SolidityFunctionWrapperGenerator.main(args2);
     }
@@ -59,7 +59,7 @@ public class BlockchainUtils {
         String fin = parseName(fileName, ".sol");
         String solPath = projectPath + File.separator + "ethereum" + File.separator + fin;
         String destinationPath = projectPath + File.separator + "ethereum";
-        String[] comm = { "solc", solPath, "--bin", "--abi", "--overwrite", "-o", destinationPath };
+        String[] comm = {"solc", solPath, "--bin", "--abi", "--overwrite", "-o", destinationPath};
         Runtime rt = Runtime.getRuntime();
         java.lang.Process p = rt.exec(comm);
         BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -78,7 +78,7 @@ public class BlockchainUtils {
 
     // 0x62A18a87Ba55FB2c26bBB18ccD07F9847e24C29d
 
-    public ProcessMonitor loadMonitor(){
+    public ProcessMonitor loadMonitor() {
         TransactionManager m = new RawTransactionManager(web3, credentials, ChainIdLong.RINKEBY);
         ContractGasProvider c = new DefaultGasProvider();
         return ProcessMonitor.load("0x62A18a87Ba55FB2c26bBB18ccD07F9847e24C29d",
@@ -93,12 +93,11 @@ public class BlockchainUtils {
         List<Ethereum.ProcessMonitor.NewContractEventResponse> response = monitor.getNewContractEvents(receipt);
         return response.get(0).newContract;*/
         //TransactionManager m = new RawTransactionManager(web3, credentials, ChainIdLong.RINKEBY);
-        System.out.println(c.getGasPrice());
-        System.out.println(c.getGasLimit());
+        //System.out.println(c.getGasPrice());
+        //System.out.println(c.getGasLimit());
         //ContractGasProvider c = new DefaultGasProvider();
         return ProcessTemplate.deploy(web3, m, c).send();
     }
-
 
 
     public static String parseName(String name, String extension) {
@@ -112,23 +111,20 @@ public class BlockchainUtils {
         //BigInteger GAS_PRICE = BigInteger.valueOf(18_000_000_000L);
         //BigInteger GAS_LIMIT = BigInteger.valueOf(9_000_000L);
         //ContractGasProvider c = new StaticGasProvider(GAS_LIMIT, GAS_PRICE);
-        System.out.println(c.getGasPrice());
-        System.out.println(c.getGasLimit());
-        return contract = ProcessTemplate.load(address,web3,m,c);
+        //System.out.println(c.getGasPrice());
+        //System.out.println(c.getGasLimit());
+        return contract = ProcessTemplate.load(address, web3, m, c);
         /*return contract = Ethereum.ProcessTemplate.load(
                 "0xe60c566C37A7DF703CDE71E81837232513836ee8",
                 web3,
                 credentials,
                 GAS_PRICE,
                 GAS_LIMIT);*/
-
-
     }
 
     public BigInteger getLatestBlockNumber() throws Exception {
         return web3.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send().getBlock().getNumber();
     }
-
 
 
     public String getStringFromContract(String variable) throws Exception {
@@ -155,7 +151,7 @@ public class BlockchainUtils {
         return contract.getIDs().send();
     }
 
-    public String getContractAddress(){
+    public String getContractAddress() {
         return contract.getContractAddress();
     }
     /*public void setMessageToContract(String messageId) throws Exception {
@@ -165,6 +161,7 @@ public class BlockchainUtils {
     public void addRuleToContract(List<String> messageId, List<String> rule) throws Exception {
         contract.addRules(messageId, rule).send();
     }
+
     public void setVarialesToContract(List<String> types, List<String> variables, List<String> values, String messageId) throws Exception {
         //contract.setVariables(stringVar, stringVal, uintVar, uintVal, boolVar, boolVal).send();
         contract.setVariables(types, variables, values, messageId).send();
@@ -198,20 +195,20 @@ public class BlockchainUtils {
         contract.executeMessage(messageId, inputs).send();
     }
 
-    public HashMap<String, List<String>> pastRules() throws Exception{
+    public HashMap<String, List<String>> pastRules() throws Exception {
         HashMap<String, List<String>> pastMessages = new HashMap<>();
         contract.messageExecuteEventFlowable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST).
-                subscribe((eventResponse) ->{
+                subscribe((eventResponse) -> {
                     String messageId = eventResponse.messageId;
                     ArrayList inputs = (ArrayList) eventResponse.inputs;
                     String from = eventResponse.log.getAddress();
 
                     System.out.println("message id: " + messageId);
-                    System.out.println("message inputs: " +inputs);
+                    System.out.println("message inputs: " + inputs);
                     System.out.println("message from: " + from);
                     System.out.println(pastMessages.size());
                     List<String> stringList = new ArrayList<>();
-                    for(int i = 0; i < inputs.size(); i++) {
+                    for (int i = 0; i < inputs.size(); i++) {
                         byte[] byteValue = ((Utf8String) inputs.get(i)).getValue().getBytes(StandardCharsets.UTF_8);
                         String stringValue = new String(byteValue, StandardCharsets.UTF_8);
                         stringList.add(stringValue);
@@ -225,7 +222,7 @@ public class BlockchainUtils {
         HashMap<List<String>, List<String>> pastRules = new HashMap<>();
 
         contract.newRuleEventFlowable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST).
-                subscribe((eventResponse) ->{
+                subscribe((eventResponse) -> {
                     ArrayList messageId = (ArrayList) eventResponse.messageId;
                     ArrayList rules = (ArrayList) eventResponse.rule;
                     String from = eventResponse.log.getAddress();
@@ -236,12 +233,12 @@ public class BlockchainUtils {
                     List<String> messageList = new ArrayList<>();
                     List<String> ruleList = new ArrayList<>();
 
-                    for(int i = 0; i < messageId.size(); i++) {
+                    for (int i = 0; i < messageId.size(); i++) {
                         byte[] byteValue = ((Utf8String) messageId.get(i)).getValue().getBytes(StandardCharsets.UTF_8);
                         String stringValue = new String(byteValue, StandardCharsets.UTF_8);
                         messageList.add(stringValue);
                     }
-                    for(int i = 0; i < rules.size(); i++) {
+                    for (int i = 0; i < rules.size(); i++) {
                         byte[] byteValue = ((Utf8String) rules.get(i)).getValue().getBytes(StandardCharsets.UTF_8);
                         String stringValue = new String(byteValue, StandardCharsets.UTF_8);
                         ruleList.add(stringValue);
