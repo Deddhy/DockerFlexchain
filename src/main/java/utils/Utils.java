@@ -35,15 +35,14 @@ public class Utils {
         BufferedWriter bChor = new BufferedWriter(wChor);
 
 
-
         String data = " ";
-        for (String rule: rules) {
+        for (String rule : rules) {
             data += rule;
         }
         String initial = "import java.util.List\n" +
                 "import java.util.Arrays\n" +
                 "import org.example.utils.BlockchainUtils\n\n";
-        bChor.write(initial+data);
+        bChor.write(initial + data);
         bChor.flush();
         bChor.close();
 
@@ -56,12 +55,12 @@ public class Utils {
         int delete = 0;
         while (myReader.hasNextLine()) {
             String buffer = myReader.nextLine();
-            if(delete == 1 && !(buffer.contains("end"))) {
+            if (delete == 1 && !(buffer.contains("end"))) {
                 data += " ";
-            } else if(delete == 1 && buffer.contains("end")) {
+            } else if (delete == 1 && buffer.contains("end")) {
                 delete = 0;
                 data += " ";
-            }else if(delete == 0 && (buffer.contains(idToChange))) {
+            } else if (delete == 0 && (buffer.contains(idToChange))) {
                 delete = 1;
                 data += " ";
             } else {
@@ -88,12 +87,12 @@ public class Utils {
         int delete = 0;
         while (myReader.hasNextLine()) {
             String buffer = myReader.nextLine();
-            if(delete == 1 && !(buffer.contains("end"))) {
+            if (delete == 1 && !(buffer.contains("end"))) {
                 data += " ";
-            } else if(delete == 1 && buffer.contains("end")) {
+            } else if (delete == 1 && buffer.contains("end")) {
                 delete = 0;
                 data += " ";
-            }else if(delete == 0 && (buffer.contains(ruleID))) {
+            } else if (delete == 0 && (buffer.contains(ruleID))) {
                 delete = 1;
                 data += " ";
             } else {
@@ -112,7 +111,6 @@ public class Utils {
     public String getPathToDrl() {
         return pathToDrl;
     }
-
 
 
 }
