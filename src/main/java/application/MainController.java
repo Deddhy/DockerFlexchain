@@ -49,6 +49,7 @@ public class MainController implements Initializable {
 
     @FXML
     private VBox boxID;
+    
 
     Alert a = new Alert(AlertType.NONE);
     BlockchainUtils u = new BlockchainUtils();
