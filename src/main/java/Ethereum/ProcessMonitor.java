@@ -30,7 +30,7 @@ import java.util.List;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with web3j version 4.8.4.
@@ -41,8 +41,9 @@ public class ProcessMonitor extends Contract {
 
     public static final String FUNC_INSTANTIATEPROCESS = "instantiateProcess";
 
-    public static final Event NEWCONTRACT_EVENT = new Event("newContract", 
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+    public static final Event NEWCONTRACT_EVENT = new Event("newContract",
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }));
     ;
 
     @Deprecated
@@ -96,7 +97,7 @@ public class ProcessMonitor extends Contract {
 
     public RemoteFunctionCall<TransactionReceipt> instantiateProcess(String newProcess) {
         final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
-                FUNC_INSTANTIATEPROCESS, 
+                FUNC_INSTANTIATEPROCESS,
                 Arrays.<Type>asList(new Address(160, newProcess)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
