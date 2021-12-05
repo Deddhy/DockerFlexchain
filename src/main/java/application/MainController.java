@@ -208,7 +208,12 @@ public class MainController implements Initializable {
                 alert.setHeaderText("Smart contract address is null");
                 alert.showAndWait();
             } else {
-                Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
+                if(Runtime.getRuntime().exec(new String [] { "which", "xdg-open" }).getInputStream().read() != -1) {
+                    Runtime.getRuntime().exec(new String [] { "xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
+                } else {
+                    System.out.println("Errore su openContract()\n");
+                }
+                //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
                 //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address2));
                 //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address));
             }
