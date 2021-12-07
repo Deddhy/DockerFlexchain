@@ -50,10 +50,12 @@ public class MainController implements Initializable {
     @FXML
     private VBox boxID;
 
+
     Alert a = new Alert(AlertType.NONE);
     BlockchainUtils u = new BlockchainUtils();
 
     private String addr;
+
     public void getPastMessages(ActionEvent event) throws Exception {
         try {
             a.setContentText("You selected contract:  " + u.getContractAddress());
@@ -74,8 +76,10 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpm) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore in getPastMessages(): \n" + gpm);
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore in getPastMessages:" + gpm);
+            alert.showAndWait();
         }
     }
 
@@ -101,8 +105,10 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpu) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore in getPastUpdates(): \n" + gpu);
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore in getPastUpdate:" + gpu);
+            alert.showAndWait();
         }
     }
 
@@ -121,7 +127,7 @@ public class MainController implements Initializable {
                 String finalRule = t.flowNodeSearch();
                 t.createFile(selectedFile.getName(), finalRule);
                 String address = t.deployAndUpload();
-                addr= address;
+                addr = address;
                 System.out.println("Addr: \n");
                 System.out.println(addr);
 
@@ -129,10 +135,10 @@ public class MainController implements Initializable {
                 // openContract(event, address);
             }
         } catch (Exception loadM) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore nel caricamento del contratto in loadModel(): \n" + loadM);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\nAver caricato un contratto valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Inserire un contratto valido.");
+            alert.showAndWait();
         }
     }
 
@@ -162,11 +168,11 @@ public class MainController implements Initializable {
             }
 
         } catch (Exception updateM) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore in updateModel(): \n" + updateM);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\n1 - Aver inserito un contratto valido\n");
-            System.out.println("\n2 - Aver caricato un contratto precedentemente con Load Custom Model\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore assicurarsi di:\n" + "1-Aver inserito un contratto valido\n" +
+                    "2 - Aver caricato un contratto precedentemente con Load Custom Model\n");
+            alert.showAndWait();
         }
     }
 
@@ -177,15 +183,15 @@ public class MainController implements Initializable {
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
         } catch (Exception bdm) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore nel caricamento del contratto in button_default_model(): \n" + bdm);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\nAver caricato un contratto valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nel caricamento del contratto in button_default_model(): \n" + bdm);
+            alert.showAndWait();
         }
     }
 
     public void openContract(ActionEvent event) throws Exception {
-
+        String os = getOperatingSystem();
         try {
             // ProcessTemplate processTemplate = u.deployContract(); //(funge)
             //Translator t = new Translator();
@@ -208,7 +214,15 @@ public class MainController implements Initializable {
                 alert.setHeaderText("Smart contract address is null");
                 alert.showAndWait();
             } else {
-                Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
+                //TODO vedere se con Linux stampa la distro oppure da solo Linux
+                if (os.equals("Linux")) {
+                    if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
+                        Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
+                    } else {
+                        System.out.println("Errore su openContract()\n");
+                    }
+                } else
+                    Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
                 //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address2));
                 //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address));
             }
@@ -219,6 +233,12 @@ public class MainController implements Initializable {
             alert.setHeaderText("First upload a model to obtain smart contract's addresss");
             alert.showAndWait();
         }
+    }
+
+    private String getOperatingSystem() {
+        String os = System.getProperty("os.name");
+        // System.out.println("Using System Property: " + os);
+        return os;
     }
 
     public void ruleList(ActionEvent event) throws Exception {
@@ -242,10 +262,10 @@ public class MainController implements Initializable {
                 //Textfield_variable_results.setText(result);
             }
         } catch (Exception ruleL) {
-            System.out.println("----------------------------------");
-            System.out.println("Manca ancora qualcosa: \n" + ruleL);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\nAver inserito un contract address valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nella ruleList" + ruleL);
+            alert.showAndWait();
         }
     }
 
@@ -286,9 +306,10 @@ public class MainController implements Initializable {
             }
             this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
         } catch (Exception execQ) {
-            System.out.println("----------------------------------");
-            System.out.println("\nQualcosa non va in executeQuery(): \n" + execQ);
-            System.out.println("\nAssicurati che il contract address sia valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nella executeQuery" + execQ);
+            alert.showAndWait();
         }
     }
 
@@ -311,25 +332,31 @@ public class MainController implements Initializable {
             // Se la barra e' nulla
 
             if (address != null && (address.isEmpty() == false)) {
-                System.out.println("Amongus gus gus");
-                System.out.println("Address: ");
-                System.out.println(address);
-                System.out.println("Addr: ");
-                System.out.println(addr);
+                /*Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Inserire un address.");
+                alert.showAndWait();*/
                 addr = address;
             }
-
-            this.a.setContentText("You selected SetContract Address query: " + addr);
-            this.a.setAlertType(AlertType.CONFIRMATION);
             ProcessTemplate contract = this.u.loadContract(addr);
             //System.out.println(contract);
-            this.a.show();
-            this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
+
+            if (contract.getContractAddress() != null) {
+                this.a.setContentText("You selected SetContract Address query: " + addr);
+                this.a.setAlertType(AlertType.CONFIRMATION);
+                this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
+                this.a.show();
+            } else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Inserire un address.");
+                alert.showAndWait();
+            }
         } catch (Exception setC) {
-            System.out.println("----------------------------------");
-            System.out.println("Errore in setContract(): \n" + setC);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("1 - Aver settato un indirizzo valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Settare un indirizzo valido.");
+            alert.showAndWait();
         }
     }
 
@@ -343,10 +370,10 @@ public class MainController implements Initializable {
             this.Text_area.setText(rule);
             this.a.show();
         } catch (Exception getR) {
-            System.out.println("----------------------------------");
-            System.out.println("\nQualcosa non va in getRule(): \n" + getR);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\nAver inserito un contract address valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nel getRule" + getR);
+            alert.showAndWait();
         }
     }
 
@@ -379,8 +406,10 @@ public class MainController implements Initializable {
             }
 
         } catch (Exception getV) {
-            System.out.println("----------------------------------");
-            System.out.println("\nNon e' stato settato alcun contratto...\n" + getV);
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nel getVariable" + getV);
+            alert.showAndWait();
         }
 
        /*
@@ -422,10 +451,10 @@ public class MainController implements Initializable {
 
             this.Text_area.setText(state);
         } catch (Exception getMS) {
-            System.out.println("----------------------------------");
-            System.out.println("\nErrore in getMessageState()\n" + getMS);
-            System.out.println("\nAssicurati di: \n");
-            System.out.println("\nAver inserito un contract address valido\n");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Errore nel getMessageState" + getMS);
+            alert.showAndWait();
         }
     }
 
