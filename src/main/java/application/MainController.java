@@ -56,6 +56,7 @@ public class MainController implements Initializable {
 
     private String addr;
 
+
     public void getPastMessages(ActionEvent event) throws Exception {
         try {
             a.setContentText("You selected contract:  " + u.getContractAddress());
@@ -128,6 +129,7 @@ public class MainController implements Initializable {
                 t.createFile(selectedFile.getName(), finalRule);
                 String address = t.deployAndUpload();
                 addr = address;
+                ProcessTemplate contract = this.u.loadContract(addr);
                 System.out.println("Addr: \n");
                 System.out.println(addr);
 
@@ -154,8 +156,8 @@ public class MainController implements Initializable {
             if (selectedFile != null) {
 
                 this.updated_model_path.setText(selectedFile.getName());
-                this.boxID.setDisable(true);
-                this.progress.setVisible(true);
+                //this.boxID.setDisable(true);
+                //this.progress.setVisible(true);
                 Translator t = new Translator();
                 t.readModel(selectedFile);
                 String finalRule = t.flowNodeSearch();
@@ -163,16 +165,17 @@ public class MainController implements Initializable {
                 t.updateRules(u.getContractAddress());
                 //Textfield_variable_results.setText("New contract deployed at: " + address);
                 //System.out.println(updated_model_path.getText());
-                this.boxID.setDisable(false);
-                this.progress.setVisible(false);
+
             }
 
         } catch (Exception updateM) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore assicurarsi di:\n" + "1-Aver inserito un contratto valido\n" +
-                    "2 - Aver caricato un contratto precedentemente con Load Custom Model\n");
+            alert.setHeaderText("Errore assicurarsi di:\n" + "1 - Aver inserito un contratto valido\n" +
+                    "2 - Aver inserito l'address nel Set Contract Address\n");
             alert.showAndWait();
+            this.boxID.setDisable(false);
+            this.progress.setVisible(false);
         }
     }
 
@@ -244,9 +247,6 @@ public class MainController implements Initializable {
     public void ruleList(ActionEvent event) throws Exception {
         //LOAD DEFAULT MODEL
         try {
-            this.a.setContentText("You selected GetMessage List");
-            this.a.setAlertType(AlertType.CONFIRMATION);
-            this.a.show();
 
             List idList = u.getIDs();
             String result = "";
@@ -317,10 +317,9 @@ public class MainController implements Initializable {
         //TextField_contract_address.setText("0x4041d79f597a341d760d1c250cc6835d0b30ab3d1893214801adc1eb39a4738e");
         try {
             String address = this.TextField_contract_address.getText();
+
             // Qui gestiamo il caso in cui andiamo a mettere direttamente l'indirizzo nella barra
             //if (addr == null || addr.isEmpty()) {
-
-            //    System.out.println("QUI CI ENTRIIIIIIIIIIIII??????");
             //System.out.println(addr);
             //    System.out.println(address);
             //if (addr != address) {
@@ -337,6 +336,7 @@ public class MainController implements Initializable {
                 alert.setHeaderText("Inserire un address.");
                 alert.showAndWait();*/
                 addr = address;
+                Button_update_model.setDisable(false);
             }
             ProcessTemplate contract = this.u.loadContract(addr);
             //System.out.println(contract);
@@ -388,22 +388,32 @@ public class MainController implements Initializable {
             String varName = this.Textfield_variable_name.getText();
             String result = "";
 
-
             if (type.equals("String")) {
                 result = this.u.getStringFromContract(varName);
             } else if (type.equals("Integer")) {
                 result = String.valueOf(this.u.getIntFromContract(varName));
             } else if (type.equals("Boolean")) {
                 result = String.valueOf(this.u.getBoolFromContract(varName));
+            } else if (Choice_variable_type.getValue().equals("Select a Variable Type")) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Selezionare il tipo di variabile.");
+                alert.showAndWait();
+            }
+            if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Prima inserisci la variabile");
+                alert.showAndWait();
+            }
+            else {
+                this.Text_area.setText(result);
+                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Choice_variable_type.getSelectionModel().getSelectedItem());
+                this.a.setAlertType(AlertType.CONFIRMATION);
+                this.a.show();
             }
 
-            if (result == null || result.isEmpty()) {
-                System.out.println("\nAssicurati di: ");
-                System.out.println("\n1 - Aver scelto un valore tra String, Integer e Boolean");
-                System.out.println("\n2 - Aver inserito un valore valido nel campo\n");
-            } else {
-                this.Text_area.setText(result);
-            }
+
 
         } catch (Exception getV) {
             Alert alert = new Alert(AlertType.ERROR);
