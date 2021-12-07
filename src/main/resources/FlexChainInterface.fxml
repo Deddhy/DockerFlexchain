@@ -44,7 +44,7 @@
                         </HBox>
                         <HBox alignment="TOP_CENTER" prefHeight="99.0" prefWidth="998.0" spacing="50.0">
                            <children>
-                              <Button fx:id="Button_update_model" mnemonicParsing="false" onAction="#updateModel" text="Update Model" />
+                              <Button fx:id="Button_update_model" mnemonicParsing="false" onAction="#updateModel" text="Update Model" disable="true" />
                               <TextField fx:id="updated_model_path" disable="true" editable="false" prefHeight="26.0" prefWidth="515.0" promptText="Model Path" />
                            </children>
                         </HBox>

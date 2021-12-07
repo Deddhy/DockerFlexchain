@@ -23,7 +23,6 @@ public class Main extends Application {
         initRootLayout();
     }
 
-
     private void initRootLayout() {
         try {
 
