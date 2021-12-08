@@ -69,7 +69,6 @@ public class MainController implements Initializable {
                 for (String singleValue : set.getValue()) {
                     finalText += singleValue + ", ";
                 }
-
             }
             //0xa0b2Dca9F0bFe557707Cb863b44D4eAC1367C214
             Text_area.setText(finalText);
@@ -152,7 +151,6 @@ public class MainController implements Initializable {
                     new ExtensionFilter("All Files", "*.*"));
             File selectedFile = fileChooser.showOpenDialog(null);
             if (selectedFile != null) {
-
                 this.updated_model_path.setText(selectedFile.getName());
                 this.boxID.setDisable(true);
                 this.progress.setVisible(true);
@@ -387,7 +385,6 @@ public class MainController implements Initializable {
             String type = (String) this.Choice_variable_type.getSelectionModel().getSelectedItem();
             String varName = this.Textfield_variable_name.getText();
             String result = "";
-
 
             if (type.equals("String")) {
                 result = this.u.getStringFromContract(varName);
