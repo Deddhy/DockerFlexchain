@@ -196,6 +196,7 @@ public class BlockchainUtils {
     }
 
     public HashMap<String, List<String>> pastRules() throws Exception {
+        //TODO
         HashMap<String, List<String>> pastMessages = new HashMap<>();
         contract.messageExecuteEventFlowable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST).
                 subscribe((eventResponse) -> {
