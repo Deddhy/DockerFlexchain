@@ -52,6 +52,7 @@ public class MainController implements Initializable {
 
 
     Alert a = new Alert(AlertType.NONE);
+    Alert alert = new Alert(AlertType.ERROR);
     BlockchainUtils u = new BlockchainUtils();
 
     private String addr;
@@ -76,12 +77,12 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpm) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore in getPastMessages:" + gpm);
             alert.showAndWait();
         }
     }
+
 
     public void getPastUpdates(ActionEvent event) throws Exception {
         try {
@@ -105,7 +106,6 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpu) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore in getPastUpdate:" + gpu);
             alert.showAndWait();
@@ -136,7 +136,6 @@ public class MainController implements Initializable {
                 // openContract(event, address);
             }
         } catch (Exception loadM) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Inserire un contratto valido.");
             alert.showAndWait();
@@ -160,19 +159,42 @@ public class MainController implements Initializable {
                 t.readModel(selectedFile);
                 String finalRule = t.flowNodeSearch();
                 t.createFile(selectedFile.getName(), finalRule);
-                t.updateRules(u.getContractAddress());
+                List<String> list=new ArrayList<>();
+                list=t.listOfNewEditedRules(u.getContractAddress());
+
+                //System.out.println("Regole aggiornate");
+                //System.out.println(list.toString());
+
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("AGGIORNAMENTO REGOLE");
+                alert.setHeaderText("Le regole che verranno aggiornate sono le seguenti:");
+                alert.setContentText("Per ulteriori informazioni cliccare su dettagli.");
+
+                TextArea area = new TextArea(list.toString());
+                area.setWrapText(true);
+                area.setEditable(false);
+
+                alert.getDialogPane().setExpandableContent(area);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    t.updateRules(u.getContractAddress());
+                } else {
+                    a.setContentText("Aggiornamento regole annullato.");
+                    a.setAlertType(AlertType.CONFIRMATION);
+                }
+
                 //Textfield_variable_results.setText("New contract deployed at: " + address);
                 //System.out.println(updated_model_path.getText());
 
             }
 
         } catch (Exception updateM) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore assicurarsi di:\n" + "1 - Aver inserito un contratto valido\n" +
                     "2 - Aver inserito l'address nel Set Contract Address\n");
             alert.showAndWait();
-            this.boxID.setDisable(false);
+            //this.boxID.setDisable(false);
             this.progress.setVisible(false);
         }
     }
@@ -184,7 +206,6 @@ public class MainController implements Initializable {
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
         } catch (Exception bdm) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nel caricamento del contratto in button_default_model(): \n" + bdm);
             alert.showAndWait();
@@ -215,7 +236,6 @@ public class MainController implements Initializable {
                 alert.setHeaderText("Smart contract address is null");
                 alert.showAndWait();
             } else {
-                //TODO vedere se con Linux stampa la distro oppure da solo Linux
                 if (os.equals("Linux")) {
                     if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
                         Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
@@ -229,7 +249,6 @@ public class MainController implements Initializable {
             }
 
         } catch (Exception addr) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("First upload a model to obtain smart contract's addresss");
             alert.showAndWait();
@@ -260,7 +279,6 @@ public class MainController implements Initializable {
                 //Textfield_variable_results.setText(result);
             }
         } catch (Exception ruleL) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nella ruleList" + ruleL);
             alert.showAndWait();
@@ -304,7 +322,6 @@ public class MainController implements Initializable {
             }
             this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
         } catch (Exception execQ) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nella executeQuery" + execQ);
             alert.showAndWait();
@@ -336,7 +353,7 @@ public class MainController implements Initializable {
                 addr = address;
                 Button_update_model.setDisable(false);
             }
-            ProcessTemplate contract = this.u.loadContract(addr);
+            ProcessTemplate contract = this.u.loadContract(addr);//c2
             //System.out.println(contract);
 
             if (contract.getContractAddress() != null) {
@@ -345,13 +362,11 @@ public class MainController implements Initializable {
                 this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
                 this.a.show();
             } else {
-                Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Attenzione");
                 alert.setHeaderText("Inserire un address.");
                 alert.showAndWait();
             }
         } catch (Exception setC) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Settare un indirizzo valido.");
             alert.showAndWait();
@@ -368,7 +383,6 @@ public class MainController implements Initializable {
             this.Text_area.setText(rule);
             this.a.show();
         } catch (Exception getR) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nel getRule" + getR);
             alert.showAndWait();
@@ -399,12 +413,10 @@ public class MainController implements Initializable {
                 alert.showAndWait();
             }
             if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
-                Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Attenzione");
                 alert.setHeaderText("Prima inserisci la variabile");
                 alert.showAndWait();
-            }
-            else {
+            } else {
                 this.Text_area.setText(result);
                 this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Choice_variable_type.getSelectionModel().getSelectedItem());
                 this.a.setAlertType(AlertType.CONFIRMATION);
@@ -412,9 +424,7 @@ public class MainController implements Initializable {
             }
 
 
-
         } catch (Exception getV) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nel getVariable" + getV);
             alert.showAndWait();
@@ -459,7 +469,6 @@ public class MainController implements Initializable {
 
             this.Text_area.setText(state);
         } catch (Exception getMS) {
-            Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Attenzione");
             alert.setHeaderText("Errore nel getMessageState" + getMS);
             alert.showAndWait();
