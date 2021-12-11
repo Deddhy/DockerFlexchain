@@ -44,6 +44,7 @@ public class Translator {
             System.out.println("pushed id: " + id);
         }*/
 
+
         u.setRulesToContract(idList, rulesList);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("");
@@ -61,18 +62,46 @@ public class Translator {
         u.executeMessage(messageId, inputs);
     }
 
+    public List<String> listOfNewEditedRules(String address) throws Exception {
+        BlockchainUtils u = new BlockchainUtils();
+        ProcessTemplate contract = u.loadContract(address);
+        List<String> list = new ArrayList<>();
+        List<String> finalRules = new ArrayList<>();
+        List<String> finalIds = new ArrayList<>();
+        List<String> newRules = new ArrayList<>();
+        List<String> newIds = new ArrayList<>();
+        List<String> oldIds = new ArrayList<>();
+
+        List ids = contract.getIDs().send();//C2
+
+        for (int i = 0; i < idList.size(); i++) {
+            if (ids.contains(idList.get(i))) {
+                String res = contract.getRule(idList.get(i)).send();
+                if (res.equals(rulesList.get(i))) {
+                    System.out.println("Same rule with id: " + idList.get(i));
+                } else {
+                    System.out.println("Rule to update: " + idList.get(i));
+                    list.add(rulesList.get(i));
+                }
+            } else {
+                System.out.println("Rule to add:  " + idList.get(i));
+                list.add(rulesList.get(i));
+            }
+        }
+        return list;
+    }
+
     public void updateRules(String address) throws Exception {
         BlockchainUtils u = new BlockchainUtils();
         ProcessTemplate contract = u.loadContract(address);
+
         List<String> finalRules = new ArrayList<>();
         List<String> finalIds = new ArrayList<>();
-
         List<String> newRules = new ArrayList<>();
         List<String> newIds = new ArrayList<>();
-
         List<String> oldIds = new ArrayList<>();
 
-        List ids = contract.getIDs().send();
+        List ids = contract.getIDs().send();//C2
 
         for (int i = 0; i < idList.size(); i++) {
             if (ids.contains(idList.get(i))) {
@@ -143,7 +172,7 @@ public class Translator {
         participantsWithoutDuplicates = new ArrayList<>(new HashSet<>(participants));
     }
 
-    //TODO
+
     //HANDLE EVENT BASED GW
     public String flowNodeSearch() {
         String rule = "";
