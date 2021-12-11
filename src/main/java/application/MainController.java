@@ -129,9 +129,9 @@ public class MainController implements Initializable {
                 String address = t.deployAndUpload();
                 addr = address;
                 ProcessTemplate contract = this.u.loadContract(addr);
-                System.out.println("Addr: \n");
-                System.out.println(addr);
-
+                //System.out.println("Addr: ");
+                //System.out.println(addr);
+                Text_area.setText("Address:" + addr);
                 //System.out.println(address);
                 // openContract(event, address);
             }
@@ -159,8 +159,8 @@ public class MainController implements Initializable {
                 t.readModel(selectedFile);
                 String finalRule = t.flowNodeSearch();
                 t.createFile(selectedFile.getName(), finalRule);
-                List<String> list=new ArrayList<>();
-                list=t.listOfNewEditedRules(u.getContractAddress());
+                List<String> list = new ArrayList<>();
+                list = t.listOfNewEditedRules(u.getContractAddress());
 
                 //System.out.println("Regole aggiornate");
                 //System.out.println(list.toString());
@@ -177,16 +177,14 @@ public class MainController implements Initializable {
                 alert.getDialogPane().setExpandableContent(area);
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK){
+                if (result.get() == ButtonType.OK) {
                     t.updateRules(u.getContractAddress());
                 } else {
                     a.setContentText("Aggiornamento regole annullato.");
                     a.setAlertType(AlertType.CONFIRMATION);
                 }
-
                 //Textfield_variable_results.setText("New contract deployed at: " + address);
                 //System.out.println(updated_model_path.getText());
-
             }
 
         } catch (Exception updateM) {
@@ -288,24 +286,32 @@ public class MainController implements Initializable {
     public void executeQuery(ActionEvent event) throws Exception {
         try {
             if (Text_messageID_query.getText() == null || Text_messageID_query.getText().isEmpty()) {
-                System.out.println("\nAssicurati che il campo messageID sia valido\n");
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Assicurati che il campo messageID sia valido");
+                alert.showAndWait();
             }
 
             if (Text_input_query.getText() == null || Text_input_query.getText().isEmpty()) {
-                System.out.println("\nAssicurati che il campo input list sia valido\n");
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Assicurati che il campo input list sia valido");
+                alert.showAndWait();
             }
 
             boolean found = false;
             List idList = u.getIDs();
             for (Object id : idList) {
                 if (Text_messageID_query.getText().equals(id)) {
-                    System.out.println("Corrispondenza trovata: \n" + id);
+                    alert.setTitle("");
+                    alert.setHeaderText("Corrispondenza trovata: \n" + id);
+                    alert.showAndWait();
                     found = true;
                     break;
                 }
             }
             if (found == false) {
-                System.out.println("Corrispondenza non trovata\n");
+                alert.setTitle("Attenzione");
+                alert.setHeaderText("Corrispondenza non trovata");
+                alert.showAndWait();
                 throw new Exception("MessageID non valido");
             }
 
@@ -323,7 +329,7 @@ public class MainController implements Initializable {
             this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
         } catch (Exception execQ) {
             alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nella executeQuery" + execQ);
+            alert.setHeaderText("Errore nella executeQuery " + execQ);
             alert.showAndWait();
         }
     }
@@ -475,7 +481,6 @@ public class MainController implements Initializable {
         }
     }
 
-
     @FXML
     public void initializeChoice() {
         this.Choice_variable_type.getItems().addAll(FXCollections.observableArrayList("String", "Integer", "Boolean"));
@@ -484,9 +489,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO Auto-generated method stub
         initializeChoice();
-
     }
-
 }

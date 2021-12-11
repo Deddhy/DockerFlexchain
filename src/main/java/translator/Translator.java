@@ -69,7 +69,7 @@ public class Translator {
         List<String> finalRules = new ArrayList<>();
         List<String> finalIds = new ArrayList<>();
         List<String> newRules = new ArrayList<>();
-        List<String> newIds = new ArrayList<>();
+        List<String> newIds =    new ArrayList<>();
         List<String> oldIds = new ArrayList<>();
 
         List ids = contract.getIDs().send();//C2
@@ -217,7 +217,6 @@ public class Translator {
                     } catch (Exception e) {
                         System.out.println("fake message detected on the request: " + requestId);
                         System.out.println("exception: " + e);
-
                         rule += "";
                     }
                 }
@@ -242,9 +241,7 @@ public class Translator {
 
             }
         }
-
         return rule;
-
     }
 
     public String getRequestId(ChoreographyTask task) {
@@ -258,7 +255,6 @@ public class Translator {
         }
         return "";
     }
-
 
     public String getResponseId(ChoreographyTask task) {
         if (task.getResponse() != null) {
@@ -277,7 +273,6 @@ public class Translator {
             return message.getAttributeValue("name");
         }
         return "";
-
     }
 
     public String createThenPart(String messageName, String messageId) {
@@ -329,7 +324,6 @@ public class Translator {
         return listTypes + listNames + listInputs + setVariables;
 
     }
-
 
     public String checkForCondition(SequenceFlow flow) {
         //recursive search for the latest previous message
