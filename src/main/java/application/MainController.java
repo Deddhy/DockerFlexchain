@@ -211,7 +211,7 @@ public class MainController implements Initializable {
     }
 
     public void openContract(ActionEvent event) throws Exception {
-        String os = getOperatingSystem();
+        //String os = getOperatingSystem();
         try {
             // ProcessTemplate processTemplate = u.deployContract(); //(funge)
             //Translator t = new Translator();
@@ -234,18 +234,56 @@ public class MainController implements Initializable {
                 alert.setHeaderText("Smart contract address is null");
                 alert.showAndWait();
             } else {
-                if (os.equals("Linux")) {
+                String url = "https://rinkeby.etherscan.io/address/" + contract.getContractAddress();
+                String os = System.getProperty("os.name").toLowerCase();
+                /*
+                if (os.startsWith("windows")) {
+                }
+
+                if (os.startsWith("nix") || os.startsWith("nux") || os.startsWith("linux")) {
                     if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
                         Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
-                    } else {
-                        System.out.println("Errore su openContract()\n");
-                    }
-                } else
-                    Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
-                //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address2));
-                //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address));
-            }
+                        } else {
+                            System.out.println("Errore su openContract()\n");
+                        }
+                }
 
+                if (os.startsWith("mac")) {}
+                */
+                Runtime rt = Runtime.getRuntime();
+                if (os.indexOf("win") >= 0) {
+                    // this doesn't support showing urls in the form of "page.html#nameLink"
+                    rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+                } else if (os.indexOf("mac") >= 0) {
+                    rt.exec("open " + url);
+                } else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0) {
+                    // Prova, in modo indipendente, a capire che unix è installato
+                    // Prova di alcuni possibili browser esistenti
+                    // Crea una stringa di comandi che sembrano "browser1 "url || "browser2 "url" || ..."
+                    if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
+                        Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
+                        } else {
+                            System.out.println("Errore su openContract()\n");
+                        }
+
+                } else {
+                    alert.setTitle("Attenzione");
+                    alert.setHeaderText("Non hai un browser supportato per aprire il link!");
+                    alert.showAndWait();
+                }
+                    /*
+                    if (os.equals("Linux")) {
+                        if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
+                            Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
+                        } else {
+                            System.out.println("Errore su openContract()\n");
+                        }
+                    } else
+                        Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
+                    //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address2));
+                    //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address));
+                    */
+            }
         } catch (Exception addr) {
             alert.setTitle("Attenzione");
             alert.setHeaderText("First upload a model to obtain smart contract's addresss");
@@ -253,11 +291,11 @@ public class MainController implements Initializable {
         }
     }
 
-    private String getOperatingSystem() {
+   /*  private String getOperatingSystem() {
         String os = System.getProperty("os.name");
         // System.out.println("Using System Property: " + os);
         return os;
-    }
+    } */
 
     public void ruleList(ActionEvent event) throws Exception {
         //LOAD DEFAULT MODEL
