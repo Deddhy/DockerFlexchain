@@ -77,8 +77,8 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpm) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore in getPastMessages:" + gpm);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure to:\n1) Have uploaded a valid contract\n");
             alert.showAndWait();
         }
     }
@@ -106,8 +106,8 @@ public class MainController implements Initializable {
             a.show();
 
         } catch (Exception gpu) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore in getPastUpdate:" + gpu);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure to:\n1) Have uploaded a valid contract\n");
             alert.showAndWait();
         }
     }
@@ -136,8 +136,8 @@ public class MainController implements Initializable {
                 // openContract(event, address);
             }
         } catch (Exception loadM) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Inserire un contratto valido.");
+            alert.setTitle("Warning");
+            alert.setHeaderText("Please insert a valid contract.");
             alert.showAndWait();
         }
     }
@@ -166,9 +166,9 @@ public class MainController implements Initializable {
                 //System.out.println(list.toString());
 
                 Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("AGGIORNAMENTO REGOLE");
-                alert.setHeaderText("Le regole che verranno aggiornate sono le seguenti:");
-                alert.setContentText("Per ulteriori informazioni cliccare su dettagli.");
+                alert.setTitle("Updating Rules");
+                alert.setHeaderText("The following rules will be updated:");
+                alert.setContentText("For further information, please click on show details.");
 
                 TextArea area = new TextArea(list.toString());
                 area.setWrapText(true);
@@ -180,7 +180,7 @@ public class MainController implements Initializable {
                 if (result.get() == ButtonType.OK) {
                     t.updateRules(u.getContractAddress());
                 } else {
-                    a.setContentText("Aggiornamento regole annullato.");
+                    a.setContentText("Update canceled.");
                     a.setAlertType(AlertType.CONFIRMATION);
                 }
                 //Textfield_variable_results.setText("New contract deployed at: " + address);
@@ -188,9 +188,9 @@ public class MainController implements Initializable {
             }
 
         } catch (Exception updateM) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore assicurarsi di:\n" + "1 - Aver inserito un contratto valido\n" +
-                    "2 - Aver inserito l'address nel Set Contract Address\n");
+            alert.setTitle("Warning");
+            alert.setHeaderText("Please verify that:\n" + "1 - A valid contract has been updated\n" +
+                    "2 - A valid address has been provided in Set Contract Address box\n");
             alert.showAndWait();
             //this.boxID.setDisable(false);
             this.progress.setVisible(false);
@@ -204,8 +204,8 @@ public class MainController implements Initializable {
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
         } catch (Exception bdm) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nel caricamento del contratto in button_default_model(): \n" + bdm);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Uploading contract has encountered an error: \n" + bdm);
             alert.showAndWait();
         }
     }
@@ -267,8 +267,8 @@ public class MainController implements Initializable {
                     }
 
                 } else {
-                    alert.setTitle("Attenzione");
-                    alert.setHeaderText("Non hai un browser supportato per aprire il link!");
+                    alert.setTitle("Warning");
+                    alert.setHeaderText("An error has occured during the opening of the link");
                     alert.showAndWait();
                 }
                     /*
@@ -285,7 +285,7 @@ public class MainController implements Initializable {
                     */
             }
         } catch (Exception addr) {
-            alert.setTitle("Attenzione");
+            alert.setTitle("Warning");
             alert.setHeaderText("First upload a model to obtain smart contract's addresss");
             alert.showAndWait();
         }
@@ -308,15 +308,15 @@ public class MainController implements Initializable {
             }
 
             if (result == null || result.isEmpty()) {
-                System.out.println("Guarda che result e' null (o vuota)!!!\n");
+                System.out.println("result is null or empty\n");
             } else {
-                System.out.println("Ecco la lista dei messaggi: " + result);
+                System.out.println("Messages list: " + result);
                 this.Text_area.setText(result);
                 //Textfield_variable_results.setText(result);
             }
         } catch (Exception ruleL) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nella ruleList" + ruleL);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure that: \n1) You set up a valid contract");
             alert.showAndWait();
         }
     }
@@ -324,15 +324,11 @@ public class MainController implements Initializable {
     public void executeQuery(ActionEvent event) throws Exception {
         try {
             if (Text_messageID_query.getText() == null || Text_messageID_query.getText().isEmpty()) {
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Assicurati che il campo messageID sia valido");
-                alert.showAndWait();
+                throw new Exception();
             }
 
             if (Text_input_query.getText() == null || Text_input_query.getText().isEmpty()) {
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Assicurati che il campo input list sia valido");
-                alert.showAndWait();
+                throw new Exception();
             }
 
             boolean found = false;
@@ -340,17 +336,14 @@ public class MainController implements Initializable {
             for (Object id : idList) {
                 if (Text_messageID_query.getText().equals(id)) {
                     alert.setTitle("");
-                    alert.setHeaderText("Corrispondenza trovata: \n" + id);
+                    alert.setHeaderText("Matched: \n" + id);
                     alert.showAndWait();
                     found = true;
                     break;
                 }
             }
             if (found == false) {
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Corrispondenza non trovata");
-                alert.showAndWait();
-                throw new Exception("MessageID non valido");
+                throw new Exception();
             }
 
             String message = "You selected Execute query: " + Text_messageID_query.getText() + " -->" + Text_input_query.getText();
@@ -366,8 +359,8 @@ public class MainController implements Initializable {
             }
             this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
         } catch (Exception execQ) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nella executeQuery " + execQ);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease check:\n1) You uploaded a valid contract\n2) The messageID and input field are filled correctly\n3) The message ID exists in the message list\n");
             alert.showAndWait();
         }
     }
@@ -406,29 +399,34 @@ public class MainController implements Initializable {
                 this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
                 this.a.show();
             } else {
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Inserire un address.");
+                alert.setTitle("Warning");
+                alert.setHeaderText("Insert an adress.");
                 alert.showAndWait();
             }
         } catch (Exception setC) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Settare un indirizzo valido.");
+            alert.setTitle("Warning");
+            alert.setHeaderText("Please set a valid address.");
             alert.showAndWait();
         }
     }
 
     public void getRule(ActionEvent event) throws Exception {
         try {
-            this.a.setContentText("You selected getRule: " + this.Textfield_messageID_get.getText());
-            this.a.setAlertType(AlertType.CONFIRMATION);
-
             String messageId = this.Textfield_messageID_get.getText();
+            if(messageId == null || messageId.isEmpty()) {
+                throw new Exception();
+            }
+            else {
+                this.a.setContentText("You selected getRule: " + this.Textfield_messageID_get.getText());
+                this.a.setAlertType(AlertType.CONFIRMATION);
+            }
+
             String rule = this.u.getRule(messageId);
             this.Text_area.setText(rule);
             this.a.show();
         } catch (Exception getR) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nel getRule" + getR);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure that:\n1) You set up a valid contract\n2) The MessageID field is valid");
             alert.showAndWait();
         }
     }
@@ -437,9 +435,6 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
-            this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Choice_variable_type.getSelectionModel().getSelectedItem());
-            this.a.setAlertType(AlertType.CONFIRMATION);
-            this.a.show();
             String type = (String) this.Choice_variable_type.getSelectionModel().getSelectedItem();
             String varName = this.Textfield_variable_name.getText();
             String result = "";
@@ -451,15 +446,10 @@ public class MainController implements Initializable {
             } else if (type.equals("Boolean")) {
                 result = String.valueOf(this.u.getBoolFromContract(varName));
             } else if (Choice_variable_type.getValue().equals("Select a Variable Type")) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Selezionare il tipo di variabile.");
-                alert.showAndWait();
+                throw new Exception();
             }
             if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Prima inserisci la variabile");
-                alert.showAndWait();
+                throw new Exception();
             } else {
                 this.Text_area.setText(result);
                 this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Choice_variable_type.getSelectionModel().getSelectedItem());
@@ -467,10 +457,13 @@ public class MainController implements Initializable {
                 this.a.show();
             }
 
+                this.Text_area.setText(result);
+                this.a.setAlertType(AlertType.CONFIRMATION);
+                this.a.show();
 
         } catch (Exception getV) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nel getVariable" + getV);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure that:\n1) You uploaded a valid contract\n2) You selected the type\n3) You inserted the variable\n");
             alert.showAndWait();
         }
 
@@ -488,11 +481,16 @@ public class MainController implements Initializable {
 
     public void getMessageState(ActionEvent event) throws Exception {
         try {
+
+            String messageId = this.Textfield_messageID_get.getText();
+            if(messageId == null || messageId.isEmpty()) {
+                throw new Exception();
+            }
+
             this.a.setContentText("You selected getRule: get message name");
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
 
-            String messageId = this.Textfield_messageID_get.getText();
             BigInteger rule = this.u.getState(messageId);
             String state = "";
             System.out.println(rule.intValue());
@@ -513,8 +511,8 @@ public class MainController implements Initializable {
 
             this.Text_area.setText(state);
         } catch (Exception getMS) {
-            alert.setTitle("Attenzione");
-            alert.setHeaderText("Errore nel getMessageState" + getMS);
+            alert.setTitle("Warning");
+            alert.setHeaderText("An error has occured\nPlease be sure to:\n1) Have uploaded a valid model\n2) The MessageID field is valid\n");
             alert.showAndWait();
         }
     }
