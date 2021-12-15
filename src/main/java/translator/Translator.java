@@ -69,7 +69,7 @@ public class Translator {
         List<String> finalRules = new ArrayList<>();
         List<String> finalIds = new ArrayList<>();
         List<String> newRules = new ArrayList<>();
-        List<String> newIds =    new ArrayList<>();
+        List<String> newIds = new ArrayList<>();
         List<String> oldIds = new ArrayList<>();
 
         List ids = contract.getIDs().send();//C2

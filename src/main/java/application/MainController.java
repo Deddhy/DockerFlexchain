@@ -131,7 +131,7 @@ public class MainController implements Initializable {
                 ProcessTemplate contract = this.u.loadContract(addr);
                 //System.out.println("Addr: ");
                 //System.out.println(addr);
-                Text_area.setText("Address:" + addr);
+                Text_area.setText("Address: " + addr);
                 //System.out.println(address);
                 // openContract(event, address);
             }
@@ -262,9 +262,9 @@ public class MainController implements Initializable {
                     // Crea una stringa di comandi che sembrano "browser1 "url || "browser2 "url" || ..."
                     if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
                         Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
-                        } else {
-                            System.out.println("Errore su openContract()\n");
-                        }
+                    } else {
+                        System.out.println("Errore su openContract()\n");
+                    }
 
                 } else {
                     alert.setTitle("Attenzione");
