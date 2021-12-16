@@ -27,9 +27,7 @@ public class Main extends Application {
         try {
 
             // Load root layout from fxml file.
-
             FXMLLoader loader = new FXMLLoader();
-            //loader.setController(new application.MainController());
             loader.setLocation(getClass().getResource("/FlexChainInterface.fxml"));
             rootLayout = (Pane) loader.load();
 

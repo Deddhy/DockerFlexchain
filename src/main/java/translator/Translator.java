@@ -30,29 +30,18 @@ public class Translator {
         t.createFile(f.getName(), finalRule);
        // t.updateRules("0xa0b2Dca9F0bFe557707Cb863b44D4eAC1367C214");
         t.deployAndUpload();
-
-
     }*/
 
     public String deployAndUpload() throws Exception {
         BlockchainUtils u = new BlockchainUtils();
-        // String address = u.deployContract();
         ProcessTemplate processTemplate = u.deployContract();
         String address = processTemplate.getContractAddress();
-        //System.out.println("L'indirizzo dello smart contract è: " + "https://rinkeby.etherscan.io/address/" + address);
         u.loadContract(address);
-        /*for(String id : idList){
-            System.out.println("pushed id: " + id);
-        }*/
-
-
         u.setRulesToContract(idList, rulesList);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("");
         alert.setHeaderText("Rules successfully uploaded in the smart contract");
         alert.showAndWait();
-        //System.out.println("Rules successfully uploaded in the smart contract");
-
         return address;
 
     }
@@ -157,8 +146,6 @@ public class Translator {
         String finalRule = t.FlowNodeSearch();
         t.createFile("buffer_" + f.getName(), finalRule);
         t.compareRules("pizza.bpmn.drl", "buffer_" + f.getName()+ ".drl");
-
-
         //BlockchainUtils u = new BlockchainUtils();
         //u.loadContract(address);
     }*/
@@ -414,7 +401,7 @@ public class Translator {
     public void createFile(String filename, String finalRule) throws IOException {
         //"src" + File.separator + "main"
         //                + File.separator + "resources" + File.separator +
-/*        URL pathToDRL = getClass().getResource("drools");
+        /*        URL pathToDRL = getClass().getResource("drools");
         FileWriter wChor = new FileWriter(new File("src" + File.separator +"main" + File.separator +"resources" +
                 File.separator + "drools" + File.separator + filename + ".drl"));
         BufferedWriter bChor = new BufferedWriter(wChor);
@@ -422,10 +409,12 @@ public class Translator {
                 "import java.util.Arrays;\n\n";
         bChor.write(initial+finalRule);
         bChor.flush();
-        bChor.close();*/
+        bChor.close();
+        */
     }
 
-    /*public void compareRules(String oldFile, String newFile) throws FileNotFoundException {
+    /*
+    public void compareRules(String oldFile, String newFile) throws FileNotFoundException {
         File oldF = new File(oldFile);
         File newF = new File(newFile);
         Scanner myReader1 = new Scanner(oldF);
@@ -474,7 +463,6 @@ public class Translator {
         }
         myReader2.close();
 
-
         for (String s: listNew) {
             if(listOld.contains(s)){
                 System.out.println("c'è già uguale");
@@ -487,7 +475,6 @@ public class Translator {
                 System.out.println("DA RIMUOVERE");
             }
         }
-
 
         List<String> modifyList = new ArrayList<>();
         String modifyBuffer = "";
@@ -520,5 +507,4 @@ public class Translator {
         }
         myReader3.close();
     } */
-
 }
