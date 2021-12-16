@@ -22,19 +22,15 @@ public class Utils {
         //data += "end";
 
         myReader.close();
-
         BufferedWriter writ = new BufferedWriter(new FileWriter(pathToDrl));
         writ.write(data);
         writ.close();
-
     }
 
     public void insertRules(List<String> rules) throws Exception {
         File file = new File(pathToDrl);
         FileWriter wChor = new FileWriter(pathToDrl);
         BufferedWriter bChor = new BufferedWriter(wChor);
-
-
         String data = " ";
         for (String rule : rules) {
             data += rule;
@@ -45,7 +41,6 @@ public class Utils {
         bChor.write(initial + data);
         bChor.flush();
         bChor.close();
-
     }
 
     public void modifyRule(String rule, String idToChange) throws Exception {
@@ -101,7 +96,6 @@ public class Utils {
 
         }
         myReader.close();
-
         BufferedWriter writ = new BufferedWriter(new FileWriter(
                 "D:\\Repos_git\\cleanmaven\\src\\main\\resources\\org\\example\\rules\\Sample.drl"));
         writ.write(data);
@@ -111,7 +105,4 @@ public class Utils {
     public String getPathToDrl() {
         return pathToDrl;
     }
-
-
 }
-

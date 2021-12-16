@@ -94,17 +94,13 @@ public class MainController implements Initializable {
 
             for (Map.Entry<List<String>, List<String>> set : pastRules.entrySet()) {
                 for (int i = 0; i < set.getKey().size(); i++) {
-                    finalText += "MessageID: " + set.getKey().get(i) + "With rule: \n" + set.getValue().get(i) + "\n";
+                    finalText += "MessageID: " + set.getKey().get(i) + "\nWith rule: \n" + set.getValue().get(i) + "\n";
                     Text_area.setText(finalText);
-                    //Textfield_variable_results.setText(finalText);
                 }
                 String newLine = System.getProperty("line.separator");
-
             }
-
             String p = "caa\n" + "ddd";
             a.show();
-
         } catch (Exception gpu) {
             alert.setTitle("Warning");
             alert.setHeaderText("An error has occured\nPlease be sure to:\n1) Have uploaded a valid contract\n");
@@ -129,11 +125,7 @@ public class MainController implements Initializable {
                 String address = t.deployAndUpload();
                 addr = address;
                 ProcessTemplate contract = this.u.loadContract(addr);
-                //System.out.println("Addr: ");
-                //System.out.println(addr);
                 Text_area.setText("Address: " + addr);
-                //System.out.println(address);
-                // openContract(event, address);
             }
         } catch (Exception loadM) {
             alert.setTitle("Warning");
@@ -141,7 +133,6 @@ public class MainController implements Initializable {
             alert.showAndWait();
         }
     }
-
 
     public void updateModel(ActionEvent event) throws Exception {
         try {
@@ -161,10 +152,6 @@ public class MainController implements Initializable {
                 t.createFile(selectedFile.getName(), finalRule);
                 List<String> list = new ArrayList<>();
                 list = t.listOfNewEditedRules(u.getContractAddress());
-
-                //System.out.println("Regole aggiornate");
-                //System.out.println(list.toString());
-
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Updating Rules");
                 alert.setHeaderText("The following rules will be updated:");
@@ -183,8 +170,6 @@ public class MainController implements Initializable {
                     a.setContentText("Update canceled.");
                     a.setAlertType(AlertType.CONFIRMATION);
                 }
-                //Textfield_variable_results.setText("New contract deployed at: " + address);
-                //System.out.println(updated_model_path.getText());
             }
 
         } catch (Exception updateM) {
@@ -211,22 +196,10 @@ public class MainController implements Initializable {
     }
 
     public void openContract(ActionEvent event) throws Exception {
-        //String os = getOperatingSystem();
         try {
-            // ProcessTemplate processTemplate = u.deployContract(); //(funge)
-            //Translator t = new Translator();
-            //String address = t.deployAndUpload();
             BlockchainUtils u = new BlockchainUtils();
             String address = this.TextField_contract_address.getText();
             ProcessTemplate contract = this.u.loadContract(addr);
-            // this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
-            // ProcessTemplate processTemplate = u.loadContract(contract.getContractAddress()); //dentro ci va il contract generato dalla load
-            //0x2fee6725a43e8fabf3706692c98a11312f079699
-            //u.loadContract(address);
-            /* Translator t = new Translator();
-            String address = t.deployAndUpload();
-            System.out.println(address);
-            */
 
             if ((contract.getContractAddress() == null || address == null)) {
                 Alert alert = new Alert(AlertType.ERROR);
@@ -236,20 +209,6 @@ public class MainController implements Initializable {
             } else {
                 String url = "https://rinkeby.etherscan.io/address/" + contract.getContractAddress();
                 String os = System.getProperty("os.name").toLowerCase();
-                /*
-                if (os.startsWith("windows")) {
-                }
-
-                if (os.startsWith("nix") || os.startsWith("nux") || os.startsWith("linux")) {
-                    if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
-                        Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
-                        } else {
-                            System.out.println("Errore su openContract()\n");
-                        }
-                }
-
-                if (os.startsWith("mac")) {}
-                */
                 Runtime rt = Runtime.getRuntime();
                 if (os.indexOf("win") >= 0) {
                     // this doesn't support showing urls in the form of "page.html#nameLink"
@@ -265,24 +224,11 @@ public class MainController implements Initializable {
                     } else {
                         System.out.println("Errore su openContract()\n");
                     }
-
                 } else {
                     alert.setTitle("Warning");
                     alert.setHeaderText("An error has occured during the opening of the link");
                     alert.showAndWait();
                 }
-                    /*
-                    if (os.equals("Linux")) {
-                        if (Runtime.getRuntime().exec(new String[]{"which", "xdg-open"}).getInputStream().read() != -1) {
-                            Runtime.getRuntime().exec(new String[]{"xdg-open", "https://rinkeby.etherscan.io/address/" + contract.getContractAddress()});
-                        } else {
-                            System.out.println("Errore su openContract()\n");
-                        }
-                    } else
-                        Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + contract.getContractAddress()));
-                    //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address2));
-                    //Desktop.getDesktop().browse(new URI("https://rinkeby.etherscan.io/address/" + address));
-                    */
             }
         } catch (Exception addr) {
             alert.setTitle("Warning");
@@ -290,12 +236,6 @@ public class MainController implements Initializable {
             alert.showAndWait();
         }
     }
-
-   /*  private String getOperatingSystem() {
-        String os = System.getProperty("os.name");
-        // System.out.println("Using System Property: " + os);
-        return os;
-    } */
 
     public void ruleList(ActionEvent event) throws Exception {
         //LOAD DEFAULT MODEL
@@ -335,7 +275,7 @@ public class MainController implements Initializable {
             List idList = u.getIDs();
             for (Object id : idList) {
                 if (Text_messageID_query.getText().equals(id)) {
-                    alert.setTitle("");
+                    alert.setAlertType(AlertType.CONFIRMATION);
                     alert.setHeaderText("Matched: \n" + id);
                     alert.showAndWait();
                     found = true;
@@ -369,13 +309,6 @@ public class MainController implements Initializable {
         //TextField_contract_address.setText("0x4041d79f597a341d760d1c250cc6835d0b30ab3d1893214801adc1eb39a4738e");
         try {
             String address = this.TextField_contract_address.getText();
-
-            // Qui gestiamo il caso in cui andiamo a mettere direttamente l'indirizzo nella barra
-            //if (addr == null || addr.isEmpty()) {
-            //System.out.println(addr);
-            //    System.out.println(address);
-            //if (addr != address) {
-            //}
             System.out.println("Address: ");
             System.out.println(address);
             System.out.println("Addr: ");
@@ -383,15 +316,10 @@ public class MainController implements Initializable {
             // Se la barra e' nulla
 
             if (address != null && (address.isEmpty() == false)) {
-                /*Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Attenzione");
-                alert.setHeaderText("Inserire un address.");
-                alert.showAndWait();*/
                 addr = address;
                 Button_update_model.setDisable(false);
             }
-            ProcessTemplate contract = this.u.loadContract(addr);//c2
-            //System.out.println(contract);
+            ProcessTemplate contract = this.u.loadContract(addr);
 
             if (contract.getContractAddress() != null) {
                 this.a.setContentText("You selected SetContract Address query: " + addr);
@@ -413,14 +341,12 @@ public class MainController implements Initializable {
     public void getRule(ActionEvent event) throws Exception {
         try {
             String messageId = this.Textfield_messageID_get.getText();
-            if(messageId == null || messageId.isEmpty()) {
+            if (messageId == null || messageId.isEmpty()) {
                 throw new Exception();
-            }
-            else {
+            } else {
                 this.a.setContentText("You selected getRule: " + this.Textfield_messageID_get.getText());
                 this.a.setAlertType(AlertType.CONFIRMATION);
             }
-
             String rule = this.u.getRule(messageId);
             this.Text_area.setText(rule);
             this.a.show();
@@ -457,33 +383,21 @@ public class MainController implements Initializable {
                 this.a.show();
             }
 
-                this.Text_area.setText(result);
-                this.a.setAlertType(AlertType.CONFIRMATION);
-                this.a.show();
+            this.Text_area.setText(result);
+            this.a.setAlertType(AlertType.CONFIRMATION);
+            this.a.show();
 
         } catch (Exception getV) {
             alert.setTitle("Warning");
             alert.setHeaderText("An error has occured\nPlease be sure that:\n1) You uploaded a valid contract\n2) You selected the type\n3) You inserted the variable\n");
             alert.showAndWait();
         }
-
-       /*
-        if(result == null || result.isEmpty()) {
-            System.out.println("Non hai settato result\n");
-        }
-
-        else {
-            System.out.println("E' stato inserito un valore\n");
-            this.Text_area.setText(result);
-		    //this.Textfield_variable_results.setText(result);
-        }*/
     }
 
     public void getMessageState(ActionEvent event) throws Exception {
         try {
-
             String messageId = this.Textfield_messageID_get.getText();
-            if(messageId == null || messageId.isEmpty()) {
+            if (messageId == null || messageId.isEmpty()) {
                 throw new Exception();
             }
 
@@ -505,10 +419,7 @@ public class MainController implements Initializable {
                     state = "COMPLETED";
                     break;
             }
-
             System.out.println("State: " + state);
-            //this.Textfield_variable_results.setText(state);
-
             this.Text_area.setText(state);
         } catch (Exception getMS) {
             alert.setTitle("Warning");
