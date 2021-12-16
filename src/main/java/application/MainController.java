@@ -152,23 +152,32 @@ public class MainController implements Initializable {
                 t.createFile(selectedFile.getName(), finalRule);
                 List<String> list = new ArrayList<>();
                 list = t.listOfNewEditedRules(u.getContractAddress());
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Updating Rules");
-                alert.setHeaderText("The following rules will be updated:");
-                alert.setContentText("For further information, please click on show details.");
-
-                TextArea area = new TextArea(list.toString());
-                area.setWrapText(true);
-                area.setEditable(false);
-
-                alert.getDialogPane().setExpandableContent(area);
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    t.updateRules(u.getContractAddress());
-                } else {
-                    a.setContentText("Update canceled.");
+                
+                if (list.isEmpty() || list == null) {
+                    a.setContentText("No rules to update");
                     a.setAlertType(AlertType.CONFIRMATION);
+                    a.show();
+                } else {
+
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Updating Rules");
+                    alert.setHeaderText("The following rules will be updated:");
+                    alert.setContentText("For further information, please click on show details.");
+
+                    TextArea area = new TextArea(list.toString());
+                    area.setWrapText(true);
+                    area.setEditable(false);
+
+                    alert.getDialogPane().setExpandableContent(area);
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        t.updateRules(u.getContractAddress());
+                    } else {
+                        a.setContentText("Update canceled.");
+                        a.setAlertType(AlertType.CONFIRMATION);
+                        a.show();
+                    }
                 }
             }
 
