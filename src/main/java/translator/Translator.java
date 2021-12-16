@@ -2,6 +2,7 @@ package translator;
 
 import Ethereum.ProcessTemplate;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.*;
@@ -143,7 +144,10 @@ public class Translator {
             u.deleteRule(oldIds);
             System.out.println("Rules removed");
         }
-
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Regole aggiornate");
+        alert.setHeaderText("Le regole sono state aggiornate con successo");
+        alert.show();
     }
 
     /*public void updateRules(String address) throws Exception {
