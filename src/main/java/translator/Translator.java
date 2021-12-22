@@ -1,8 +1,10 @@
 package translator;
 
 import Ethereum.ProcessTemplate;
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.*;
@@ -15,6 +17,7 @@ import java.net.URL;
 import java.util.*;
 
 public class Translator {
+
     BpmnModelInstance modelInstance;
     List<String> participants;
     List<String> participantsWithoutDuplicates;
@@ -43,7 +46,6 @@ public class Translator {
         alert.setHeaderText("Rules successfully uploaded in the smart contract");
         alert.showAndWait();
         return address;
-
     }
 
     public void executeMessage(String address, String messageId, List<String> inputs) throws Exception {

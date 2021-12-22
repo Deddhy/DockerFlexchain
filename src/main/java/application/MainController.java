@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.*;
 import Ethereum.ProcessTemplate;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -31,7 +33,7 @@ import utils.BlockchainUtils;
 public class MainController implements Initializable {
 
     @FXML
-    private Button Button_load_model, Button_set_contract, Button_execute, button_default_model, Button_update_model, Button_rule_list, Button_getRule, Button_getVariable, Button_messageState;
+    private Button Button_set_contract, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute;
 
     @FXML
     private TextField loaded_model_path, Text_messageID_query, Text_input_query, updated_model_path,
@@ -39,17 +41,13 @@ public class MainController implements Initializable {
             TextField_monitor_results;
 
     @FXML
-    private TextArea Text_area;
+    private TextArea Text_area, Text_areaTwo, Text_areaThree;
 
     @FXML
-    private ProgressIndicator progress;
+    private ChoiceBox<String> Button_getVariable;
 
     @FXML
-    private ChoiceBox<String> Choice_variable_type;
-
-    @FXML
-    private VBox boxID;
-
+    private TabPane boxID;
 
     Alert a = new Alert(AlertType.NONE);
     Alert alert = new Alert(AlertType.ERROR);
@@ -73,7 +71,7 @@ public class MainController implements Initializable {
                 }
             }
             //0xa0b2Dca9F0bFe557707Cb863b44D4eAC1367C214
-            Text_area.setText(finalText);
+            Text_areaThree.setText(finalText);
             a.show();
 
         } catch (Exception gpm) {
@@ -95,7 +93,7 @@ public class MainController implements Initializable {
             for (Map.Entry<List<String>, List<String>> set : pastRules.entrySet()) {
                 for (int i = 0; i < set.getKey().size(); i++) {
                     finalText += "MessageID: " + set.getKey().get(i) + "\nWith rule: \n" + set.getValue().get(i) + "\n";
-                    Text_area.setText(finalText);
+                    Text_areaThree.setText(finalText);
                 }
                 String newLine = System.getProperty("line.separator");
             }
@@ -146,13 +144,14 @@ public class MainController implements Initializable {
                 this.updated_model_path.setText(selectedFile.getName());
                 //this.boxID.setDisable(true);
                 //this.progress.setVisible(true);
+                //this.progress.progressProperty();
                 Translator t = new Translator();
                 t.readModel(selectedFile);
                 String finalRule = t.flowNodeSearch();
                 t.createFile(selectedFile.getName(), finalRule);
                 List<String> list = new ArrayList<>();
                 list = t.listOfNewEditedRules(u.getContractAddress());
-                
+
                 if (list.isEmpty() || list == null) {
                     a.setContentText("No rules to update");
                     a.setAlertType(AlertType.CONFIRMATION);
@@ -187,7 +186,7 @@ public class MainController implements Initializable {
                     "2 - A valid address has been provided in Set Contract Address box\n");
             alert.showAndWait();
             //this.boxID.setDisable(false);
-            this.progress.setVisible(false);
+            //this.progress.setVisible(false);
         }
     }
 
@@ -260,7 +259,7 @@ public class MainController implements Initializable {
                 System.out.println("result is null or empty\n");
             } else {
                 System.out.println("Messages list: " + result);
-                this.Text_area.setText(result);
+                this.Text_areaThree.setText(result);
                 //Textfield_variable_results.setText(result);
             }
         } catch (Exception ruleL) {
@@ -333,7 +332,7 @@ public class MainController implements Initializable {
             if (contract.getContractAddress() != null) {
                 this.a.setContentText("You selected SetContract Address query: " + addr);
                 this.a.setAlertType(AlertType.CONFIRMATION);
-                this.Text_area.setText("Contract loaded at: " + contract.getContractAddress());
+                this.Text_areaTwo.setText("Contract loaded at: " + contract.getContractAddress());
                 this.a.show();
             } else {
                 alert.setTitle("Warning");
@@ -357,7 +356,7 @@ public class MainController implements Initializable {
                 this.a.setAlertType(AlertType.CONFIRMATION);
             }
             String rule = this.u.getRule(messageId);
-            this.Text_area.setText(rule);
+            this.Text_areaThree.setText(rule);
             this.a.show();
         } catch (Exception getR) {
             alert.setTitle("Warning");
@@ -370,7 +369,7 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
-            String type = (String) this.Choice_variable_type.getSelectionModel().getSelectedItem();
+            String type = (String) this.Button_getVariable.getSelectionModel().getSelectedItem();
             String varName = this.Textfield_variable_name.getText();
             String result = "";
 
@@ -380,14 +379,14 @@ public class MainController implements Initializable {
                 result = String.valueOf(this.u.getIntFromContract(varName));
             } else if (type.equals("Boolean")) {
                 result = String.valueOf(this.u.getBoolFromContract(varName));
-            } else if (Choice_variable_type.getValue().equals("Select a Variable Type")) {
+            } else if (Button_getVariable.getValue().equals("Select a Variable Type")) {
                 throw new Exception();
             }
             if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
                 throw new Exception();
             } else {
-                this.Text_area.setText(result);
-                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Choice_variable_type.getSelectionModel().getSelectedItem());
+                this.Text_areaThree.setText(result);
+                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Button_getVariable.getSelectionModel().getSelectedItem());
                 this.a.setAlertType(AlertType.CONFIRMATION);
                 this.a.show();
             }
@@ -429,7 +428,7 @@ public class MainController implements Initializable {
                     break;
             }
             System.out.println("State: " + state);
-            this.Text_area.setText(state);
+            this.Text_areaThree.setText(state);
         } catch (Exception getMS) {
             alert.setTitle("Warning");
             alert.setHeaderText("An error has occured\nPlease be sure to:\n1) Have uploaded a valid model\n2) The MessageID field is valid\n");
@@ -439,8 +438,8 @@ public class MainController implements Initializable {
 
     @FXML
     public void initializeChoice() {
-        this.Choice_variable_type.getItems().addAll(FXCollections.observableArrayList("String", "Integer", "Boolean"));
-        this.Choice_variable_type.setValue("Select a Variable Type");
+        this.Button_getVariable.getItems().addAll(FXCollections.observableArrayList("String", "Integer", "Boolean"));
+        this.Button_getVariable.setValue("Select a Variable Type");
     }
 
     @Override
