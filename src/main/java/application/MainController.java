@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-import com.jfoenix.controls.JFXButton;
 import javafx.scene.control.*;
 import Ethereum.ProcessTemplate;
 import javafx.collections.FXCollections;
