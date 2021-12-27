@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Bpmn" />
         <module name="Translator" />
+        <module name="DockerFlexchain" />
       </profile>
     </annotationProcessing>
   </component>

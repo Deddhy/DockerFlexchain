@@ -32,7 +32,7 @@ import utils.BlockchainUtils;
 public class MainController implements Initializable {
 
     @FXML
-    private Button Button_set_contract, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute;
+    private Button Button_set_contract, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute, Visualize_Contract;
 
     @FXML
     private TextField loaded_model_path, Text_messageID_query, Text_input_query, updated_model_path,
