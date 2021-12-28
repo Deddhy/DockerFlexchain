@@ -174,7 +174,7 @@
                               </VBox>
                               <VBox alignment="CENTER" prefHeight="46.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;">
                                  <children>
-                                    <ChoiceBox fx:id="Button_getVariable" prefWidth="150.0" style="-fx-background-color: A4D9FF;" />
+                                    <ChoiceBox fx:id="ChoiceBox_getVariable" prefWidth="150.0" style="-fx-background-color: A4D9FF;" />
                                  </children>
                               </VBox>
                            </children>
@@ -188,17 +188,20 @@
                               </VBox>
                               <VBox alignment="CENTER" prefHeight="46.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;">
                                  <children>
-                                    <Button fx:id="Get_pastMessage" mnemonicParsing="false" onAction="#getPastMessages" style="-fx-background-color: A4D9FF;" text="Get past messages" />
+                                    <Button fx:id="Button_getVariable" mnemonicParsing="false" onAction="#getVariable" style="-fx-background-color: A4D9FF;" text="Get Variable" />
                                  </children>
                               </VBox>
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <VBox prefHeight="46.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;" />
                               <VBox alignment="CENTER" prefHeight="46.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;">
                                  <children>
                                     <Button fx:id="Button_getPastUpdates" mnemonicParsing="false" onAction="#getPastUpdates" style="-fx-background-color: A4D9FF;" text="Get past updates" />
+                                 </children></VBox>
+                              <VBox alignment="CENTER" prefHeight="46.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;">
+                                 <children>
+                                    <Button fx:id="Get_pastMessage" mnemonicParsing="false" onAction="#getPastMessages" style="-fx-background-color: A4D9FF;" text="Get past messages" />
                                  </children>
                               </VBox>
                            </children>

@@ -32,7 +32,7 @@ import utils.BlockchainUtils;
 public class MainController implements Initializable {
 
     @FXML
-    private Button Button_set_contract, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute, Visualize_Contract;
+    private Button Button_set_contract,Button_getVariable, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute, Visualize_Contract;
 
     @FXML
     private TextField loaded_model_path, Text_messageID_query, Text_input_query, updated_model_path,
@@ -43,7 +43,7 @@ public class MainController implements Initializable {
     private TextArea Text_area, Text_areaTwo, Text_areaThree;
 
     @FXML
-    private ChoiceBox<String> Button_getVariable;
+    private ChoiceBox<String> ChoiceBox_getVariable ;
 
     @FXML
     private TabPane boxID;
@@ -368,7 +368,7 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
-            String type = (String) this.Button_getVariable.getSelectionModel().getSelectedItem();
+            String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
             String varName = this.Textfield_variable_name.getText();
             String result = "";
 
@@ -378,14 +378,14 @@ public class MainController implements Initializable {
                 result = String.valueOf(this.u.getIntFromContract(varName));
             } else if (type.equals("Boolean")) {
                 result = String.valueOf(this.u.getBoolFromContract(varName));
-            } else if (Button_getVariable.getValue().equals("Select a Variable Type")) {
+            } else if (ChoiceBox_getVariable.getValue().equals("Select a Variable Type")) {
                 throw new Exception();
             }
             if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
                 throw new Exception();
             } else {
                 this.Text_areaThree.setText(result);
-                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.Button_getVariable.getSelectionModel().getSelectedItem());
+                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem());
                 this.a.setAlertType(AlertType.CONFIRMATION);
                 this.a.show();
             }
@@ -437,8 +437,8 @@ public class MainController implements Initializable {
 
     @FXML
     public void initializeChoice() {
-        this.Button_getVariable.getItems().addAll(FXCollections.observableArrayList("String", "Integer", "Boolean"));
-        this.Button_getVariable.setValue("Select a Variable Type");
+        this.ChoiceBox_getVariable.getItems().addAll(FXCollections.observableArrayList("String", "Integer", "Boolean"));
+        this.ChoiceBox_getVariable.setValue("Select a Variable Type");
     }
 
     @Override
