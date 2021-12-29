@@ -36,7 +36,7 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField loaded_model_path, Text_messageID_query, Text_input_query, updated_model_path,
-            TextField_contract_address, Textfield_messageID_get, Textfield_variable_name, Textfield_variable_results,
+            TextField_contract_address, Textfield_messageID_get, Text_variable, Textfield_variable_results,
             TextField_monitor_results;
 
     @FXML
@@ -368,8 +368,9 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
+
             String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
-            String varName = this.Textfield_variable_name.getText();
+            String varName = this.Text_variable.getText();
             String result = "";
 
             if (type.equals("String")) {
@@ -381,15 +382,15 @@ public class MainController implements Initializable {
             } else if (ChoiceBox_getVariable.getValue().equals("Select a Variable Type")) {
                 throw new Exception();
             }
-            if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
+            if (this.Text_variable.getText() == null || this.Text_variable.getText().isEmpty()) {
                 throw new Exception();
             } else {
                 this.Text_areaThree.setText(result);
-                this.a.setContentText("You selected getRule: " + this.Textfield_variable_name.getText() + "-->" + this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem());
+                this.a.setContentText("You selected getRule: " + this.Text_variable.getText() + "-->" + this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem());
                 this.a.setAlertType(AlertType.CONFIRMATION);
                 this.a.show();
             }
-
+            System.out.println("QUI ENTRO!");
             this.Text_area.setText(result);
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
