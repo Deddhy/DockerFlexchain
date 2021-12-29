@@ -368,27 +368,10 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
-<<<<<<< HEAD
-            System.out.println("Vecio 0...");
             String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
-            System.out.println("Vecio 1...");
-            String varName = this.Textfield_variable_name.getText();
-            System.out.println("Vecio 2...");
-=======
-<<<<<<< HEAD
 
-            String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
             String varName = this.Text_variable.getText();
-=======
-            System.out.println("Vecio 0...");
-            String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
-            System.out.println("Vecio 1...");
-            String varName = this.Textfield_variable_name.getText();
-            System.out.println("Vecio 2...");
->>>>>>> 9d250c8 (added)
->>>>>>> Deddhy-master
             String result = "";
-            System.out.println("Sono arrivato nel TRY");
 
             if (type.equals("String")) {
                 result = this.u.getStringFromContract(varName);
@@ -399,24 +382,14 @@ public class MainController implements Initializable {
             } else if (ChoiceBox_getVariable.getValue().equals("Select a Variable Type")) {
                 throw new Exception();
             }
-<<<<<<< HEAD
             if (this.Text_variable.getText() == null || this.Text_variable.getText().isEmpty()) {
-=======
-            if (this.Textfield_variable_name.getText() == null || this.Textfield_variable_name.getText().isEmpty()) {
-                System.out.println("Sei arrivato...nell'IF");
-<<<<<<< HEAD
-=======
->>>>>>> 9d250c8 (added)
->>>>>>> Deddhy-master
                 throw new Exception();
             } else {
-                System.out.println("Sei nell'else");
                 this.Text_areaThree.setText(result);
                 this.a.setContentText("You selected getRule: " + this.Text_variable.getText() + "-->" + this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem());
                 this.a.setAlertType(AlertType.CONFIRMATION);
                 this.a.show();
             }
-            System.out.println("QUI ENTRO!");
             this.Text_area.setText(result);
             this.a.setAlertType(AlertType.CONFIRMATION);
             this.a.show();
