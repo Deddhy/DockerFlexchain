@@ -32,7 +32,7 @@ import utils.BlockchainUtils;
 public class MainController implements Initializable {
 
     @FXML
-    private Button Button_set_contract,Button_getVariable, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute, Visualize_Contract;
+    private Button Button_set_contract, Button_getVariable, Button_rule_list, Button_getRule, Button_messageState, Button_load_model, Button_update_model, Button_execute, Visualize_Contract;
 
     @FXML
     private TextField loaded_model_path, Text_messageID_query, Text_input_query, updated_model_path,
@@ -43,7 +43,7 @@ public class MainController implements Initializable {
     private TextArea Text_area, Text_areaTwo, Text_areaThree;
 
     @FXML
-    private ChoiceBox<String> ChoiceBox_getVariable ;
+    private ChoiceBox<String> ChoiceBox_getVariable;
 
     @FXML
     private TabPane boxID;
@@ -283,16 +283,21 @@ public class MainController implements Initializable {
             for (Object id : idList) {
                 if (Text_messageID_query.getText().equals(id)) {
                     alert.setAlertType(AlertType.CONFIRMATION);
-                    alert.setHeaderText("Matched: \n" + id);
-                    alert.showAndWait();
-                    found = true;
-                    break;
+                    alert.setHeaderText("Match found, confirm?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        alert.setHeaderText("Matched: \n" + id);
+                        alert.showAndWait();
+                        found = true;
+                        break;
+                    } else {
+                        return;
+                    }
                 }
             }
             if (found == false) {
                 throw new Exception();
             }
-
             String message = "You selected Execute query: " + Text_messageID_query.getText() + " -->" + Text_input_query.getText();
             String content = this.Text_input_query.getText();
             this.a.setContentText(message);
@@ -305,11 +310,13 @@ public class MainController implements Initializable {
                 parameters.add(elem);
             }
             this.u.executeMessage(this.Text_messageID_query.getText(), parameters);
-        } catch (Exception execQ) {
+        } catch (
+                Exception execQ) {
             alert.setTitle("Warning");
             alert.setHeaderText("An error has occured\nPlease check:\n1) You uploaded a valid contract\n2) The messageID and input field are filled correctly\n3) The message ID exists in the message list\n");
             alert.showAndWait();
         }
+
     }
 
     public void setContract(ActionEvent event) {
@@ -368,8 +375,8 @@ public class MainController implements Initializable {
     public void getVariable(ActionEvent event) throws Exception {
 
         try {
-            String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
 
+            String type = (String) this.ChoiceBox_getVariable.getSelectionModel().getSelectedItem();
             String varName = this.Text_variable.getText();
             String result = "";
 
